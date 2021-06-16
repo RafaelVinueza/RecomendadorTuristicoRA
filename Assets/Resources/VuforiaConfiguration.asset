@@ -21,7 +21,7 @@ MonoBehaviour:
     maxSimultaneousObjectTargets: 1
     useDelayedLoadingObjectTargets: 0
     version: 8.1.7
-    eulaAcceptedVersions: '{"Values":["8.1"]}'
+    eulaAcceptedVersions: '{"Values":["8.1","9.8"]}'
   digitalEyewear:
     cameraOffset: 0.06
     distortionRenderingLayer: 31
@@ -64,6 +64,6 @@ MonoBehaviour:
     autoInitTracker: 0
     autoStartTracker: 0
   webcam:
-    deviceNameSetInEditor: Iriun Webcam
+    deviceNameSetInEditor: Integrated Webcam
     turnOffWebCam: 0
     renderTextureLayer: 30
