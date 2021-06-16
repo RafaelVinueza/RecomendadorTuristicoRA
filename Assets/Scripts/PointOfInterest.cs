@@ -10,6 +10,7 @@ public class PointOfInterest
     string nombre;
     string horarioAtencion;
     string tipo;
+    string distancia;
     GameObject cubo;
 
 
@@ -19,8 +20,9 @@ public class PointOfInterest
     public string HorarioAtencion { get => horarioAtencion; set => horarioAtencion = value; }
     public GameObject Cubo { get => cubo; set => cubo = value; }
     public string Tipo { get => tipo; set => tipo = value; }
+    public string Distancia { get => distancia; set => distancia = value; }
 
-    public PointOfInterest(double latitud, double longitud, string nombre, string horarioAtencion, string tipo)
+    public PointOfInterest(double latitud, double longitud, string nombre, string horarioAtencion, string tipo, string distancia)
     {
         this.latitud = latitud;
         this.longitud = longitud;
@@ -28,6 +30,7 @@ public class PointOfInterest
         this.horarioAtencion = horarioAtencion;
         this.Cubo = null;
         this.tipo = tipo;
+        this.distancia = distancia;
     }
 
     public PointOfInterest(double latitud, double longitud) {
