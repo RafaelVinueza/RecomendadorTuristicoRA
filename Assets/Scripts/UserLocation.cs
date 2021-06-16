@@ -33,8 +33,10 @@ public class UserLocation : MonoBehaviour
 
         for (int i = 0; i < ubicaciones.Length; i++)
         {
-           if(FormulaHaversine((float)miLat, (float)miLong, (float)ubicaciones[i].Latitud, (float)ubicaciones[i].Longitud) < 300)
+            float distance = FormulaHaversine((float)miLat, (float)miLong, (float)ubicaciones[i].Latitud, (float)ubicaciones[i].Longitud);
+            if (distance < 300)
             {
+                ubicaciones[i].Distancia = distance.ToString();
                 ubicacionesVisibles.Add(ubicaciones[i]);
             }
             else
@@ -52,6 +54,7 @@ public class UserLocation : MonoBehaviour
                 new Vector3((float)ubicacionesVirtuales[i, 0], 0, (float)ubicacionesVirtuales[i, 1]),
                 Quaternion.identity);
             ubicacionesVisibles[i].Cubo.transform.localScale = calcularEscala((float)TransformarMetrosUnidades(FormulaHaversine((float)miLat, (float)miLong, (float)ubicaciones[i].Latitud, (float)ubicaciones[i].Longitud)));
+            ubicacionesVisibles[i].Distancia = "";
             
             if (ubicacionesVisibles[i].Cubo.GetComponent<POIData>() != null)
                 ubicacionesVisibles[i].Cubo.GetComponent<POIData>().setData(ubicacionesVisibles[i]);
@@ -165,8 +168,10 @@ public class UserLocation : MonoBehaviour
 
         for (int i = 0; i < ubicaciones.Length; i++)
         {
-            if (FormulaHaversine((float)miLat, (float)miLong, (float)ubicaciones[i].Latitud, (float)ubicaciones[i].Longitud) < 300)
+            float distance = FormulaHaversine((float)miLat, (float)miLong, (float)ubicaciones[i].Latitud, (float)ubicaciones[i].Longitud);
+            if (distance < 300)
             {
+                ubicaciones[i].Distancia = distance.ToString();
                 ubicacionesVisibles.Add(ubicaciones[i]);
             }
             else
@@ -175,7 +180,7 @@ public class UserLocation : MonoBehaviour
             }
         }
 
-        for(int i = 0; i < ubicacionesOcultas.Count; i++)
+        for (int i = 0; i < ubicacionesOcultas.Count; i++)
         {
             Destroy(ubicacionesOcultas[i].Cubo);
         }

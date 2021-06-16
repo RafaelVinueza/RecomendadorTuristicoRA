@@ -29,17 +29,24 @@ public class TouchEvent : MonoBehaviour
                             GameObject plano = hit.collider.transform.GetChild(0).gameObject;
 
                             if (!plano.activeInHierarchy)
+                            {
                                 plano.SetActive(true);
+                                TextMeshPro nombre = plano.transform.GetChild(0).gameObject.GetComponent<TextMeshPro>();
+                                TextMeshPro horario = plano.transform.GetChild(1).gameObject.GetComponent<TextMeshPro>();
+                                TextMeshPro tipo = plano.transform.GetChild(2).gameObject.GetComponent<TextMeshPro>();
+                                TextMeshPro distancia = plano.transform.GetChild(3).gameObject.GetComponent<TextMeshPro>();
+
+                                nombre.text = poiData.getData().Nombre;
+                                horario.text = poiData.getData().HorarioAtencion;
+                                tipo.text = poiData.getData().Tipo;
+                                distancia.text = poiData.getData().Distancia;
+                            }
                             else
+                            {
                                 plano.SetActive(false);
+                            }
 
-                            TextMeshPro nombre = plano.transform.GetChild(0).gameObject.GetComponent<TextMeshPro>();
-                            TextMeshPro horario = plano.transform.GetChild(1).gameObject.GetComponent<TextMeshPro>();
-                            TextMeshPro tipo = plano.transform.GetChild(2).gameObject.GetComponent<TextMeshPro>();
-
-                            nombre.text = poiData.getData().Nombre;
-                            horario.text = poiData.getData().HorarioAtencion;
-                            tipo.text = poiData.getData().Tipo;
+                            
                         }
                         catch (Exception e)
                         {
