@@ -160,8 +160,11 @@ public class UserLocation : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        miLat = GPS.Instance.latitud;
-        miLong = GPS.Instance.longitud;
+        //miLat = GPS.Instance.latitud;
+        //miLong = GPS.Instance.longitud;
+
+        miLat = -0.12914759411639676f;
+        miLong = -78.48616997182278f;
 
         ubicacionesVisibles.Clear();
         ubicacionesOcultas.Clear();
