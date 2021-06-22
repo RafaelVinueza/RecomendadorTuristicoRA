@@ -243,16 +243,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5197038599742107920}
     m_Modifications:
-    - target: {fileID: 4987256235291482147, guid: 0e4a5e273d734ae46b442568c380b1e9,
-        type: 3}
-      propertyPath: m_Name
-      value: Plane
-      objectReference: {fileID: 0}
-    - target: {fileID: 4987256235291482147, guid: 0e4a5e273d734ae46b442568c380b1e9,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2712369738794460390, guid: 0e4a5e273d734ae46b442568c380b1e9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -306,6 +296,16 @@ PrefabInstance:
     - target: {fileID: 2712369738794460390, guid: 0e4a5e273d734ae46b442568c380b1e9,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987256235291482147, guid: 0e4a5e273d734ae46b442568c380b1e9,
+        type: 3}
+      propertyPath: m_Name
+      value: Plane
+      objectReference: {fileID: 0}
+    - target: {fileID: 4987256235291482147, guid: 0e4a5e273d734ae46b442568c380b1e9,
+        type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5337539051237843317, guid: 0e4a5e273d734ae46b442568c380b1e9,
