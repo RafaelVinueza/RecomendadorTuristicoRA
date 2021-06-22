@@ -1096,6 +1096,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fc5cb7587afd0847af1ae3cc3e67ca1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  datos:
+    totalDays: 1
+    location:
+      lat: -0.21432708
+      lng: -78.50962
+    startDate: 2021/09/22
+    categories:
+    - Museums
 --- !u!1 &452078701
 GameObject:
   m_ObjectHideFlags: 0
