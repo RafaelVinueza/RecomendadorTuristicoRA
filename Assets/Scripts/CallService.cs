@@ -36,14 +36,28 @@ public class CallService : MonoBehaviour
     void PostData() => StartCoroutine(PostData_Coroutine()); 
     IEnumerator PostData_Coroutine()
     {
-        WWWForm form = new WWWForm();
-        form.AddField("Text", JsonUtility.ToJson(datos));
-        UnityWebRequest web = UnityWebRequest.Post("localhost:8080", form);
-        yield return web.SendWebRequest();
-        if (!web.isNetworkError && !web.isHttpError)
+
+        var request = new UnityWebRequest("http://localhost:8080/ttdp", "POST");
+        string json = JsonUtility.ToJson(datos);
+
+        byte[] bodyRaw = Encoding.UTF8.GetBytes(json);
+        request.uploadHandler = (UploadHandler)new UploadHandlerRaw(bodyRaw);
+        request.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
+        yield return request.SendWebRequest();
+
+        if (request.error != null)
         {
-            var datosRegreso = web;
+            Debug.Log("Error: " + request.error);
         }
+        else
+        {
+            Debug.Log("All OK");
+            Debug.Log("Status Code: " + request.responseCode);
+
+            var respuesta = request;
+        }
+        
     }
 
 
