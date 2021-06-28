@@ -1097,7 +1097,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   datos:
-    totalDays: 1
+    totalDays: 2
     location:
       lat: -0.21432708
       lng: -78.50962
