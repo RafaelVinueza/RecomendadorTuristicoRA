@@ -1,10 +1,18 @@
-﻿using System;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-[Serializable]
-public class PointInterest
+public class PointInterest : MonoBehaviour
 {
-    public string type;
-    public string business_status;
-    public string formatted_address;
-    public Location location = new Location();
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
 }
