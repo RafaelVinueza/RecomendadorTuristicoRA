@@ -62,6 +62,30 @@ public class CallService : MonoBehaviour
             var respuesta = request.downloadHandler.text;
             //var respuesta = JsonUtility.FromJson<>(request.downloadHandler.text);
 
+            schedule = JsonConvert.DeserializeObject<Schedule[]>(respuesta);
+
+            days = new List<PointInterest>[schedule.Length];
+
+            for (int i = 0; i < schedule.Length; i++)
+            {
+                days[i] = new List<PointInterest>();
+
+                for (int j = 0; j < schedule[i].tour.Length; j++)
+                {
+                    poi = JsonConvert.DeserializeObject<PointInterest>(schedule[i].tour[j].ToString());
+                    if(poi.type == "poi")
+                    {
+                        days[i].Add(poi);
+                    }
+                }
+            }
+            
+
+            
+            //Tour tour = JsonUtility.FromJson<Tour>(schedule[0].tour.ToString());
+            //var schedule = JsonConvert.DeserializeObject(request.downloadHandler.text);
+            var stop = 0;
+
         }
 
     }
