@@ -77,7 +77,7 @@ public class CallService : MonoBehaviour
                     poi = JsonConvert.DeserializeObject<PointInterest>(schedule[i].tour[j].ToString());
                     if (poi.type == "poi")
                     {
-                        if (poi.opening_hours != null)
+                        if(poi.opening_hours != null)
                             poi.open_hours = JsonConvert.DeserializeObject<OpenHour>(poi.opening_hours.ToString());
                         days[i].Add(poi);
                     }
