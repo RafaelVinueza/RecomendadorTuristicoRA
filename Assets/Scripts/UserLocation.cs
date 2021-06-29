@@ -123,33 +123,33 @@ public class UserLocation : MonoBehaviour
     {
         switch (tipo)
         {
-            case "Restaurante":
+            case "Restaurant":
                 return prefabs[1];
-            case "Iglesia":
+            case "Church":
                 return prefabs[2];
-            case "Parque":
+            case "Park":
                 return prefabs[3];
             case "Hospital":
                 return prefabs[4];
-            case "Gasolinera":
+            case "FullStation":
                 return prefabs[5];
-            case "Museo":
+            case "Museum":
                 return prefabs[6];
             case "Hotel":
                 return prefabs[7];
-            case "Cine":
+            case "MovieTheater":
                 return prefabs[8];
-            case "BarDisc":
+            case "Bar":
                 return prefabs[9];
-            case "Deporte":
+            case "Sport":
                 return prefabs[10];
             case "Shopping":
                 return prefabs[11];
-            case "UniEducativa":
+            case "School":
                 return prefabs[12];
-            case "PoliBomberos":
+            case "Police":
                 return prefabs[13];
-            case "Supermercado":
+            case "Supermarket":
                 return prefabs[14];
             default:
                 return prefabs[0];
