@@ -80,6 +80,7 @@ public class CallService : MonoBehaviour
                 }
             }
             
+
             
             //Tour tour = JsonUtility.FromJson<Tour>(schedule[0].tour.ToString());
             //var schedule = JsonConvert.DeserializeObject(request.downloadHandler.text);
