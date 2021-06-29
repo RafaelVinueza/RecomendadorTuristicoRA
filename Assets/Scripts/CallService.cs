@@ -1,5 +1,7 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.Text;
+using Mapbox.Json;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -59,7 +61,7 @@ public class CallService : MonoBehaviour
         {
             Debug.Log("All OK");
             Debug.Log("Status Code: " + request.responseCode);
-            var respuesta = request.downloadHandler.text;
+            //var respuesta = request.downloadHandler.text;
             //var respuesta = JsonUtility.FromJson<>(request.downloadHandler.text);
 
             schedule = JsonConvert.DeserializeObject<Schedule[]>(respuesta);
@@ -73,8 +75,10 @@ public class CallService : MonoBehaviour
                 for (int j = 0; j < schedule[i].tour.Length; j++)
                 {
                     poi = JsonConvert.DeserializeObject<PointInterest>(schedule[i].tour[j].ToString());
-                    if(poi.type == "poi")
+                    if (poi.type == "poi")
                     {
+                        if (poi.opening_hours != null)
+                            poi.open_hours = JsonConvert.DeserializeObject<OpenHour>(poi.opening_hours.ToString());
                         days[i].Add(poi);
                     }
                 }

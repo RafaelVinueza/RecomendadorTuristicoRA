@@ -4,15 +4,14 @@ using UnityEngine;
 
 public class PointInterest : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public string type;
+    public string business_status;
+    public string formatted_address;
+    public string international_phone_number;
+    public string name;
+    public System.Object opening_hours;
+    public OpenHour open_hours;
+    public float rating;
+    public System.Object website;
+    public Location location = new Location();
 }
