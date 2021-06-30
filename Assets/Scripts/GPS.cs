@@ -11,23 +11,14 @@ public class GPS : MonoBehaviour
     public float latitud;
     public float longitud;
 
-    public Text latitudeValue;
-    public Text longitudeValue;
-
-
     void Start()
     {
-        latitudeValue.text = latitud.ToString();
-        longitudeValue.text = longitud.ToString();
         latitud = -0.12914759411639676f;
         longitud = -78.48616997182278f;
     }
 
     private void Update()
     {
-        latitudeValue.text = latitud.ToString();
-        longitudeValue.text = longitud.ToString();
-
         //latitud = -0.12914759411639676f;
         //longitud = -78.48616997182278f;
 
@@ -74,8 +65,6 @@ public class GPS : MonoBehaviour
         {
             latitud = Input.location.lastData.latitude;
             longitud = Input.location.lastData.longitude;
-            latitudeValue.text = latitud.ToString();
-            longitudeValue.text = longitud.ToString();
         }
         else
         {
