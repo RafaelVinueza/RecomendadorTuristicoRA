@@ -65,8 +65,9 @@ public class CallService : MonoBehaviour
 
         if (request.error != null)
         {
-            SceneManager.LoadScene("SceneForm");
             Debug.Log("Error: " + request.error);
+            PlayerPrefs.SetString("errorDatosServicio", "Could not connect to the service");
+            SceneManager.LoadScene("SceneForm");
         }
         else
         {
@@ -100,13 +101,9 @@ public class CallService : MonoBehaviour
             }
             else
             {
-                //devolver error de null o que la respuesta no tiene valor
+                PlayerPrefs.SetString("errorDatosServicio", "The requested information could not be generated, try again");
                 SceneManager.LoadScene("SceneForm");
             }
-
-            //Tour tour = JsonUtility.FromJson<Tour>(schedule[0].tour.ToString());
-            //var schedule = JsonConvert.DeserializeObject(request.downloadHandler.text);
-            var stop = 0;
 
         }
 
