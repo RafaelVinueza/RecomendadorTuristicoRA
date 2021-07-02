@@ -33,10 +33,6 @@ public class ChangeScene : MonoBehaviour
                 {
                     SceneManager.LoadScene("SceneLoading");
                 }
-                else
-                {
-                    //devolver los 
-                }
                 break;
             case "Scene1":
                 SceneManager.LoadScene("Scene2");
