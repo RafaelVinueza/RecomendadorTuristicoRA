@@ -4,9 +4,9 @@ using System.Collections.Generic;
 [Serializable]
 public class Tour
 {
-    private List<PointInterest>[] days;
+    private List<PointOfInterest>[] days;
 
-    public List<PointInterest>[] Days { get => days; set => days = value; }
+    public List<PointOfInterest>[] Days { get => days; set => days = value; }
 
     public Tour()
     {
