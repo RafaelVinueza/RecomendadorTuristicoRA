@@ -12,6 +12,6 @@ public class PointInterest : MonoBehaviour
     public System.Object opening_hours;
     public OpenHour open_hours;
     public float rating;
-    public System.Object website;
+    public string website;
     public Location location = new Location();
 }

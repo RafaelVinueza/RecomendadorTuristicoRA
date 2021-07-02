@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class Variables : MonoBehaviour
 {
@@ -19,23 +20,25 @@ public class Variables : MonoBehaviour
 
 
     //mios
-    private PointOfInterest[] ubicaciones = {
-            new PointOfInterest(-0.12881892216479307, -78.48514214490213, "Punto general", "0:00 - 14:00", "General",""),
-            new PointOfInterest(-0.12901950898813322, -78.48726269159879, "KFC", "0:00 - 12:00", "Restaurante",""),
-            new PointOfInterest(-0.12987513203891415, -78.48722782385948, "San Francisco", "0:00 - 16:00", "Iglesia",""),
-            new PointOfInterest(-0.13063419498339018, -78.48504450430167, "El arbolito", "0:00 - 15:00", "Parque",""),
-            new PointOfInterest(-0.12880493251384292, -78.48486211424304, "McDonalds", "0:00 - 24:00", "Restaurante",""),
-            new PointOfInterest(-0.11937160243827653, -78.48624337664937, "Nombre", "0:00 - 24:00", "Gasolineria",""),
-            new PointOfInterest(-0.12945685636551782, -78.48246990396505, "Nombre", "0:00 - 24:00", "Museo",""),  //mas de 300m
-            new PointOfInterest(-0.13339925527698535, -78.48669255818707, "Nombre", "0:00 - 24:00", "Hotel",""),
-            new PointOfInterest(-0.12792185450610694, -78.48895910189235, "Nombre", "0:00 - 24:00", "Cine",""),
-            new PointOfInterest(-0.12792185450610694, -78.48895910189235, "Nombre", "0:00 - 24:00", "Deporte",""),
-            new PointOfInterest(-0.1259208276554583, -78.48637067637105, "Nombre", "0:00 - 24:00", "UniEducativa","")
-    };
+    //private PointOfInterest[] ubicaciones = {
+    //        new PointOfInterest(-0.12881892216479307, -78.48514214490213, "Punto general", "0:00 - 14:00", "General",""),
+    //        new PointOfInterest(-0.12901950898813322, -78.48726269159879, "KFC", "0:00 - 12:00", "Restaurante",""),
+    //        new PointOfInterest(-0.12987513203891415, -78.48722782385948, "San Francisco", "0:00 - 16:00", "Iglesia",""),
+    //        new PointOfInterest(-0.13063419498339018, -78.48504450430167, "El arbolito", "0:00 - 15:00", "Parque",""),
+    //        new PointOfInterest(-0.12880493251384292, -78.48486211424304, "McDonalds", "0:00 - 24:00", "Restaurante",""),
+    //        new PointOfInterest(-0.11937160243827653, -78.48624337664937, "Nombre", "0:00 - 24:00", "Gasolineria",""),
+    //        new PointOfInterest(-0.12945685636551782, -78.48246990396505, "Nombre", "0:00 - 24:00", "Museo",""),  //mas de 300m
+    //        new PointOfInterest(-0.13339925527698535, -78.48669255818707, "Nombre", "0:00 - 24:00", "Hotel",""),
+    //        new PointOfInterest(-0.12792185450610694, -78.48895910189235, "Nombre", "0:00 - 24:00", "Cine",""),
+    //        new PointOfInterest(-0.12792185450610694, -78.48895910189235, "Nombre", "0:00 - 24:00", "Deporte",""),
+    //        new PointOfInterest(-0.1259208276554583, -78.48637067637105, "Nombre", "0:00 - 24:00", "UniEducativa","")
+    //};
+
+    public List<PointOfInterest>[] days;
 
     public Variables()
     {
     }
 
-    public PointOfInterest[] Ubicaciones { get => ubicaciones; set => ubicaciones = value; }
+    //public PointOfInterest[] Ubicaciones { get => ubicaciones; set => ubicaciones = value; }
 }
