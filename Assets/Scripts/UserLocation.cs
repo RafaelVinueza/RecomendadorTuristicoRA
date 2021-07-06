@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,85 +12,104 @@ public class UserLocation : MonoBehaviour
     double[,] ubicacionesVirtuales;
     public float miLat;
     public float miLong;
+    public Dropdown dropDownDays;
     private Variables variables;
-    private PointOfInterest[] ubicaciones;
     List<PointOfInterest>[] days;
+    List<string> opcionesDropDown = new List<string>();
+    private int daySelected;
 
     List<PointOfInterest> ubicacionesVisibles = new List<PointOfInterest>();
     List<PointOfInterest> ubicacionesOcultas = new List<PointOfInterest>();
 
+
+    void Awake()
+    {
+        variables = GameObject.Find("Controller").GetComponent<Variables>();
+        days = variables.days;
+        dropDownDays.ClearOptions();
+        daySelected = 0;
+
+        for (int i = 0; i < days.Length; i++)
+        {
+            opcionesDropDown.Add("Day " + (i + 1));
+        }
+
+        dropDownDays.AddOptions(opcionesDropDown);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        miLat = GPS.Instance.latitud;
-        miLong = GPS.Instance.longitud;
+        //miLat = GPS.Instance.latitud;
+        //miLong = GPS.Instance.longitud;
 
-        //miLat = -0.12914759411639676f;
-        //miLong = -78.48616997182278f;
+        miLat = -0.12914759411639676f;
+        miLong = -78.48616997182278f;
 
-        variables = GameObject.Find("Controller").GetComponent<Variables>();
-        days = variables.days;
+        for (int i = 0; i < days[daySelected].Count; i++)
+        {
+            float distance = FormulaHaversine((float)miLat, (float)miLong, float.Parse(days[daySelected][i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(days[daySelected][i].location.lng, CultureInfo.InvariantCulture.NumberFormat));
+            if (distance < 1000)
+            {
+                days[daySelected][i].distancia = distance.ToString();
+                ubicacionesVisibles.Add(days[daySelected][i]);
+            }
+            else
+            {
+                ubicacionesOcultas.Add(days[daySelected][i]);
+            }
+        }
 
-        //ubicaciones = variables.Ubicaciones;
+        ubicacionesVirtuales = EncontrarCuadrante((float)miLat, (float)miLong, ubicacionesVisibles);
 
-        //for (int i = 0; i < ubicaciones.Length; i++)
-        //{
-        //    float distance = FormulaHaversine((float)miLat, (float)miLong, (float)ubicaciones[i].Latitud, (float)ubicaciones[i].Longitud);
-        //    if (distance < 300)
-        //    {
-        //        ubicaciones[i].Distancia = distance.ToString();
-        //        ubicacionesVisibles.Add(ubicaciones[i]);
-        //    }
-        //    else
-        //    {
-        //        ubicacionesOcultas.Add(ubicaciones[i]);
-        //    }
-        //}
+        for (int i = 0; i < ubicacionesVisibles.Count; i++)
+        {
+            ubicacionesVisibles[i].cubo = Instantiate(buscarIcono("default"),
+                new Vector3((float)ubicacionesVirtuales[i, 0], 0, (float)ubicacionesVirtuales[i, 1]),
+                Quaternion.identity);
+            ubicacionesVisibles[i].cubo.transform.localScale = calcularEscala((float)TransformarMetrosUnidades(FormulaHaversine((float)miLat, (float)miLong, float.Parse(days[daySelected][i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(days[daySelected][i].location.lng, CultureInfo.InvariantCulture.NumberFormat))));
+            ubicacionesVisibles[i].distancia = "";
 
-        //ubicacionesVirtuales = EncontrarCuadrante((float)miLat, (float)miLong, ubicacionesVisibles);
+            if (ubicacionesVisibles[i].cubo.GetComponent<POIData>() != null)
+                ubicacionesVisibles[i].cubo.GetComponent<POIData>().setData(ubicacionesVisibles[i]);
 
-        //for (int i = 0; i < ubicacionesVisibles.Count; i++)
-        //{
-            
-        //    ubicacionesVisibles[i].Cubo = Instantiate(buscarIcono(ubicacionesVisibles[i].Tipo),
-        //        new Vector3((float)ubicacionesVirtuales[i, 0], 0, (float)ubicacionesVirtuales[i, 1]),
-        //        Quaternion.identity);
-        //    ubicacionesVisibles[i].Cubo.transform.localScale = calcularEscala((float)TransformarMetrosUnidades(FormulaHaversine((float)miLat, (float)miLong, (float)ubicaciones[i].Latitud, (float)ubicaciones[i].Longitud)));
-        //    ubicacionesVisibles[i].Distancia = "";
-            
-        //    if (ubicacionesVisibles[i].Cubo.GetComponent<POIData>() != null)
-        //        ubicacionesVisibles[i].Cubo.GetComponent<POIData>().setData(ubicacionesVisibles[i]);
-
-        //}
+        }
     }
 
-    public double[,] EncontrarCuadrante(float lat1, float long1, List<PointOfInterest> ubicaciones)
+    public void daysChange(int day)
     {
-        //float lat3 = lat1;
-        //double[,] ubicacionesVirtuales = new double[ubicaciones.Count, 2];
-        
-        //for (int i = 0; i < ubicaciones.Count; i++)
-        //{
-        //    if (lat1 <= ubicaciones[i].Latitud && long1 <= ubicaciones[i].Longitud)
-        //    {
-        //        ubicacionesVirtuales[i, 0] = TransformarMetrosUnidades(FormulaHaversine((float)miLat, (float)miLong, lat3, (float)ubicaciones[i].Longitud));
-        //        ubicacionesVirtuales[i, 1] = TransformarMetrosUnidades(FormulaHaversine((float)ubicaciones[i].Latitud, (float)ubicaciones[i].Longitud, lat3, (float)ubicaciones[i].Longitud));
-        //    }else if (lat1 > ubicaciones[i].Latitud && long1 <= ubicaciones[i].Longitud)
-        //    {
-        //        ubicacionesVirtuales[i, 0] = TransformarMetrosUnidades(FormulaHaversine((float)miLat, (float)miLong, lat3, (float)ubicaciones[i].Longitud));
-        //        ubicacionesVirtuales[i, 1] = TransformarMetrosUnidades(FormulaHaversine((float)ubicaciones[i].Latitud, (float)ubicaciones[i].Longitud, lat3, (float)ubicaciones[i].Longitud)) * -1;
-        //    }else if (lat1 > ubicaciones[i].Latitud && long1 > ubicaciones[i].Longitud)
-        //    {
-        //        ubicacionesVirtuales[i, 0] = TransformarMetrosUnidades(FormulaHaversine((float)miLat, (float)miLong, lat3, (float)ubicaciones[i].Longitud)) * -1;
-        //        ubicacionesVirtuales[i, 1] = TransformarMetrosUnidades(FormulaHaversine((float)ubicaciones[i].Latitud, (float)ubicaciones[i].Longitud, lat3, (float)ubicaciones[i].Longitud)) * -1;
-        //    }else if (lat1 <= ubicaciones[i].Latitud && long1 > ubicaciones[i].Longitud)
-        //    {
-        //        ubicacionesVirtuales[i, 0] = TransformarMetrosUnidades(FormulaHaversine((float)miLat, (float)miLong, lat3, (float)ubicaciones[i].Longitud)) * -1;
-        //        ubicacionesVirtuales[i, 1] = TransformarMetrosUnidades(FormulaHaversine((float)ubicaciones[i].Latitud, (float)ubicaciones[i].Longitud, lat3, (float)ubicaciones[i].Longitud));
-        //    }
-        //}
-        //return ubicacionesVirtuales;
-        return null;
+        daySelected = day;
+    }
+
+    public double[,] EncontrarCuadrante(float lat1, float long1, List<PointOfInterest> places)
+    {
+        float lat3 = lat1;
+        double[,] ubicacionesVirtuales = new double[places.Count, 2];
+
+        for (int i = 0; i < places.Count; i++)
+        {
+            if (lat1 <= float.Parse(places[i].location.lat, CultureInfo.InvariantCulture.NumberFormat) && long1 <= float.Parse(places[i].location.lng, CultureInfo.InvariantCulture.NumberFormat))
+            {
+                ubicacionesVirtuales[i, 0] = TransformarMetrosUnidades(FormulaHaversine((float)miLat, (float)miLong, lat3, float.Parse(places[i].location.lng, CultureInfo.InvariantCulture.NumberFormat)));
+                ubicacionesVirtuales[i, 1] = TransformarMetrosUnidades(FormulaHaversine(float.Parse(places[i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(places[i].location.lng, CultureInfo.InvariantCulture.NumberFormat), lat3, float.Parse(places[i].location.lng, CultureInfo.InvariantCulture.NumberFormat)));
+            }
+            else if (lat1 > float.Parse(places[i].location.lat, CultureInfo.InvariantCulture.NumberFormat) && long1 <= float.Parse(places[i].location.lng, CultureInfo.InvariantCulture.NumberFormat))
+            {
+                ubicacionesVirtuales[i, 0] = TransformarMetrosUnidades(FormulaHaversine((float)miLat, (float)miLong, lat3, float.Parse(places[i].location.lng, CultureInfo.InvariantCulture.NumberFormat)));
+                ubicacionesVirtuales[i, 1] = TransformarMetrosUnidades(FormulaHaversine(float.Parse(places[i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(places[i].location.lng, CultureInfo.InvariantCulture.NumberFormat), lat3, float.Parse(places[i].location.lng, CultureInfo.InvariantCulture.NumberFormat))) * -1;
+            }
+            else if (lat1 > float.Parse(places[i].location.lat, CultureInfo.InvariantCulture.NumberFormat) && long1 > float.Parse(places[i].location.lng, CultureInfo.InvariantCulture.NumberFormat))
+            {
+                ubicacionesVirtuales[i, 0] = TransformarMetrosUnidades(FormulaHaversine((float)miLat, (float)miLong, lat3, float.Parse(places[i].location.lng, CultureInfo.InvariantCulture.NumberFormat))) * -1;
+                ubicacionesVirtuales[i, 1] = TransformarMetrosUnidades(FormulaHaversine(float.Parse(places[i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(places[i].location.lng, CultureInfo.InvariantCulture.NumberFormat), lat3, float.Parse(places[i].location.lng, CultureInfo.InvariantCulture.NumberFormat))) * -1;
+            }
+            else if (lat1 <= float.Parse(places[i].location.lat, CultureInfo.InvariantCulture.NumberFormat) && long1 > float.Parse(places[i].location.lng, CultureInfo.InvariantCulture.NumberFormat))
+            {
+                ubicacionesVirtuales[i, 0] = TransformarMetrosUnidades(FormulaHaversine((float)miLat, (float)miLong, lat3, float.Parse(places[i].location.lng, CultureInfo.InvariantCulture.NumberFormat))) * -1;
+                ubicacionesVirtuales[i, 1] = TransformarMetrosUnidades(FormulaHaversine(float.Parse(places[i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(places[i].location.lng, CultureInfo.InvariantCulture.NumberFormat), lat3, float.Parse(places[i].location.lng, CultureInfo.InvariantCulture.NumberFormat)));
+            }
+        }
+        return ubicacionesVirtuales;
     }
 
     public double TransformarMetrosUnidades(float metros)
@@ -162,56 +182,56 @@ public class UserLocation : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        ////miLat = GPS.Instance.latitud;
-        ////miLong = GPS.Instance.longitud;
+        //miLat = GPS.Instance.latitud;
+        //miLong = GPS.Instance.longitud;
 
-        //miLat = -0.12914759411639676f;
-        //miLong = -78.48616997182278f;
+        miLat = -0.12914759411639676f;
+        miLong = -78.48616997182278f;
 
-        //ubicacionesVisibles.Clear();
-        //ubicacionesOcultas.Clear();
+        ubicacionesVisibles.Clear();
+        ubicacionesOcultas.Clear();
 
-        //for (int i = 0; i < ubicaciones.Length; i++)
-        //{
-        //    float distance = FormulaHaversine((float)miLat, (float)miLong, (float)ubicaciones[i].Latitud, (float)ubicaciones[i].Longitud);
-        //    if (distance < 300)
-        //    {
-        //        ubicaciones[i].Distancia = distance.ToString();
-        //        ubicacionesVisibles.Add(ubicaciones[i]);
-        //    }
-        //    else
-        //    {
-        //        ubicacionesOcultas.Add(ubicaciones[i]);
-        //    }
-        //}
+        for (int i = 0; i < days[daySelected].Count; i++)
+        {
+            float distance = FormulaHaversine((float)miLat, (float)miLong, float.Parse(days[daySelected][i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(days[daySelected][i].location.lng, CultureInfo.InvariantCulture.NumberFormat));
+            if (distance < 300)
+            {
+                days[daySelected][i].distancia = distance.ToString();
+                ubicacionesVisibles.Add(days[daySelected][i]);
+            }
+            else
+            {
+                ubicacionesOcultas.Add(days[daySelected][i]);
+            }
+        }
 
-        //for (int i = 0; i < ubicacionesOcultas.Count; i++)
-        //{
-        //    Destroy(ubicacionesOcultas[i].cubo);
-        //}
+        for (int i = 0; i < ubicacionesOcultas.Count; i++)
+        {
+            Destroy(ubicacionesOcultas[i].cubo);
+        }
 
-        //ubicacionesVirtuales = EncontrarCuadrante((float)miLat, (float)miLong, ubicacionesVisibles);
+        ubicacionesVirtuales = EncontrarCuadrante((float)miLat, (float)miLong, ubicacionesVisibles);
 
-        //for (int i = 0; i < ubicacionesVisibles.Count; i++)
-        //{
-        //    if(ubicacionesVisibles[i].cubo == null)
-        //    {
-        //        ubicacionesVisibles[i].cubo = Instantiate(buscarIcono(ubicacionesVisibles[i].Tipo),
-        //        new Vector3((float)ubicacionesVirtuales[i, 0], 0, (float)ubicacionesVirtuales[i, 1]),
-        //        Quaternion.identity);
-        //        ubicacionesVisibles[i].cubo.transform.localScale = calcularEscala((float)TransformarMetrosUnidades(FormulaHaversine((float)miLat, (float)miLong, (float)ubicaciones[i].Latitud, (float)ubicaciones[i].Longitud)));
+        for (int i = 0; i < ubicacionesVisibles.Count; i++)
+        {
+            if (ubicacionesVisibles[i].cubo == null)
+            {
+                ubicacionesVisibles[i].cubo = Instantiate(buscarIcono("default"),
+                new Vector3((float)ubicacionesVirtuales[i, 0], 0, (float)ubicacionesVirtuales[i, 1]),
+                Quaternion.identity);
+                ubicacionesVisibles[i].cubo.transform.localScale = calcularEscala((float)TransformarMetrosUnidades(FormulaHaversine((float)miLat, (float)miLong, float.Parse(days[daySelected][i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(days[daySelected][i].location.lng, CultureInfo.InvariantCulture.NumberFormat))));
 
-        //        if(ubicacionesVisibles[i].cubo.GetComponent<POIData>() != null)
-        //            ubicacionesVisibles[i].cubo.GetComponent<POIData>().setData(ubicacionesVisibles[i]);
-                
-        //    }
-        //    else
-        //    {
-        //        ubicacionesVisibles[i].cubo.transform.position = new Vector3((float)ubicacionesVirtuales[i, 0], 0, (float)ubicacionesVirtuales[i, 1]);
-        //        ubicacionesVisibles[i].cubo.transform.localScale = calcularEscala((float)TransformarMetrosUnidades(FormulaHaversine((float)miLat, (float)miLong, (float)ubicaciones[i].Latitud, (float)ubicaciones[i].Longitud)));
-        //    }
+                if (ubicacionesVisibles[i].cubo.GetComponent<POIData>() != null)
+                    ubicacionesVisibles[i].cubo.GetComponent<POIData>().setData(ubicacionesVisibles[i]);
 
-        //}
+            }
+            else
+            {
+                ubicacionesVisibles[i].cubo.transform.position = new Vector3((float)ubicacionesVirtuales[i, 0], 0, (float)ubicacionesVirtuales[i, 1]);
+                ubicacionesVisibles[i].cubo.transform.localScale = calcularEscala((float)TransformarMetrosUnidades(FormulaHaversine((float)miLat, (float)miLong, float.Parse(days[daySelected][i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(days[daySelected][i].location.lng, CultureInfo.InvariantCulture.NumberFormat))));
+            }
+
+        }
 
     }
 }
