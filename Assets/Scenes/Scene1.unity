@@ -205,6 +205,7 @@ MonoBehaviour:
   miLat: 0
   miLong: 0
   dropDownDays: {fileID: 981055917}
+  openMap: {fileID: 1696781645}
 --- !u!114 &129363150
 MonoBehaviour:
   m_ObjectHideFlags: 0

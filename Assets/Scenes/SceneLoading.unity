@@ -324,13 +324,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   datos:
-    totalDays: 1
+    totalDays: 2
     location:
-      lat: -0.2143271
-      lng: -78.50962
+      lat: -0.12914759
+      lng: -78.48617
     startDate: 2021/09/22
     categories:
     - Museums
+    - Parks
   flag: 0
 --- !u!4 &2042192619
 Transform:

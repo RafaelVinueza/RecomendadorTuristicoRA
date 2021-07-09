@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -6,15 +8,26 @@ using UnityEngine.UI;
 
 public class Validations : MonoBehaviour
 {
+    public InputField totalDays;
     public InputField startDate;
     public InputField startTour;
     public InputField endTour;
     public InputField startLunch;
     public InputField endLunch;
     public Text textError;
+    public int placesCount = 0;
     Regex reDate = new Regex("^\\d{4}([\\-/.])(0?[1-9]|1[1-2])\\1(3[01]|[12][0-9]|0?[1-9])$");
-    Regex reHour = new Regex("^([01]?[0 - 9]|2[0-3]):[0-5][0-9]$");
+    Regex reHour = new Regex("^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$");
     string todayDate;
+    private Variables variables;
+    public List<string> categories;
+    public List<Toggle> togglePlaces;
+
+    private void Awake()
+    {
+        variables = GameObject.Find("Controller").GetComponent<Variables>();
+        categories = new List<string> { "Aquariums", "Premise", "Churches", "Cementeries", "Art Galleries", "Zoo", "Mosques", "City Halls", "Parks", "Museums", "Stadiums", "Amusement Park", "Indu Temples" };
+    }
 
 
     public bool validateDate()
@@ -32,10 +45,17 @@ public class Validations : MonoBehaviour
         else
             return false;
     }
-    
+
+    public void validatePlaces(bool tag)
+    {
+        if (tag)
+            placesCount++;
+        else
+            placesCount--;
+    }
+
     public bool validate()
     {
-
         //if (validateDate() && validateHour(startTour) && validateHour(endLunch) && validateHour(startLunch) && validateHour(endLunch))
         if (validateDate())
         {
@@ -48,9 +68,45 @@ public class Validations : MonoBehaviour
                         if (validateHour(startLunch))
                         {
                             todayDate = DateTime.UtcNow.Date.ToString("yyyy/MM/dd");
-                            if(DateTime.Compare(Convert.ToDateTime(startDate.text), Convert.ToDateTime(todayDate)) >= 0)
+                            if (DateTime.Compare(Convert.ToDateTime(startDate.text), Convert.ToDateTime(todayDate)) >= 0)
                             {
-                                return true;
+                                if (placesCount > 0)
+                                {
+                                    variables.serviceLoadData.totalDays = int.Parse(totalDays.text,CultureInfo.InvariantCulture.NumberFormat);
+                                    variables.serviceLoadData.startDate = startDate.text;
+                                    variables.serviceLoadData.travelSchedule.start = startTour.text.Replace(":","");
+                                    variables.serviceLoadData.travelSchedule.end = endTour.text.Replace(":", "");
+                                    variables.serviceLoadData.luchTime.start = startLunch.text.Replace(":", "");
+                                    variables.serviceLoadData.luchTime.end = endLunch.text.Replace(":", "");
+                                    variables.serviceLoadData.location.lat = GPS.Instance.latitud;
+                                    variables.serviceLoadData.location.lng = GPS.Instance.longitud;
+                                    int aux = 0;
+                                    int auxi = 0;
+                                    for (int i= 0; i < togglePlaces.Count; i++)
+                                    {
+                                        if (togglePlaces[i].isOn)
+                                        {
+                                            aux++;
+                                        }
+                                    }
+                                    variables.serviceLoadData.categories = new string[aux];
+
+                                    for (int i = 0; i < togglePlaces.Count; i++)
+                                    {
+                                        if (togglePlaces[i].isOn)
+                                        {
+                                            variables.serviceLoadData.categories[auxi] = categories[i];
+                                            auxi++;
+                                        }
+                                    }
+                                    var arttt = 0;
+                                    return true;
+                                }
+                                else
+                                {
+                                    textError.text = "Choice at least one place";
+                                    return false;
+                                }
                             }
                             else
                             {
@@ -87,6 +143,5 @@ public class Validations : MonoBehaviour
             textError.text = "Start date is not in the correct format (yyyy/mm/dd)";
             return false;
         }
-            
     }
 }

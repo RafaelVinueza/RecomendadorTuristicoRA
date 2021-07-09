@@ -25,9 +25,6 @@ namespace Mapbox.Unity.Map
 	public class AbstractMap : MonoBehaviour, IMap
 	{
 
-        private string latitudPrefsName = "LatitudUsuario";
-        private string longitudPrefsName = "LongitudUsuario";
-
         #region Private Fields
 
         [SerializeField] private MapOptions _options = new MapOptions();
