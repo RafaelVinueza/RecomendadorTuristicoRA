@@ -16,20 +16,20 @@ public class PointOfInterest
     public string website;
     public Location location = new Location();
     
-    public string tipo;
-    public string distancia;
+    public string typePOI;
+    public string distance;
     public GameObject cubo;
 
     public PointOfInterest(string tipo, string distancia)
     {
         this.cubo = null;
-        this.tipo = tipo;
-        this.distancia = distancia;
+        this.typePOI = tipo;
+        this.distance = distancia;
     }
 
     public PointOfInterest(){
         this.cubo = null;
-        this.tipo = "Sin definir";
+        this.typePOI = "Sin definir";
     }
     
 }
