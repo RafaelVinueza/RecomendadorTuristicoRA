@@ -13,10 +13,12 @@ public class UserLocation : MonoBehaviour
     public float miLat;
     public float miLong;
     public Dropdown dropDownDays;
+    public Button openMap;
     private Variables variables;
     List<PointOfInterest>[] days;
     List<string> opcionesDropDown = new List<string>();
     private int daySelected;
+    
 
     List<PointOfInterest> ubicacionesVisibles = new List<PointOfInterest>();
     List<PointOfInterest> ubicacionesOcultas = new List<PointOfInterest>();
@@ -25,9 +27,11 @@ public class UserLocation : MonoBehaviour
     void Awake()
     {
         variables = GameObject.Find("Controller").GetComponent<Variables>();
+        openMap.onClick.AddListener(GameObject.Find("Controller").GetComponent<ChangeScene>().LoadScene);
         days = variables.days;
         dropDownDays.ClearOptions();
         daySelected = 0;
+        variables.daySelected = 0;
 
         for (int i = 0; i < days.Length; i++)
         {
@@ -49,9 +53,10 @@ public class UserLocation : MonoBehaviour
         for (int i = 0; i < days[daySelected].Count; i++)
         {
             float distance = FormulaHaversine((float)miLat, (float)miLong, float.Parse(days[daySelected][i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(days[daySelected][i].location.lng, CultureInfo.InvariantCulture.NumberFormat));
+            days[daySelected][i].distance = distance.ToString();
+
             if (distance < 1000)
             {
-                days[daySelected][i].distancia = distance.ToString();
                 ubicacionesVisibles.Add(days[daySelected][i]);
             }
             else
@@ -68,7 +73,7 @@ public class UserLocation : MonoBehaviour
                 new Vector3((float)ubicacionesVirtuales[i, 0], 0, (float)ubicacionesVirtuales[i, 1]),
                 Quaternion.identity);
             ubicacionesVisibles[i].cubo.transform.localScale = calcularEscala((float)TransformarMetrosUnidades(FormulaHaversine((float)miLat, (float)miLong, float.Parse(days[daySelected][i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(days[daySelected][i].location.lng, CultureInfo.InvariantCulture.NumberFormat))));
-            ubicacionesVisibles[i].distancia = "";
+            ubicacionesVisibles[i].distance = "";
 
             if (ubicacionesVisibles[i].cubo.GetComponent<POIData>() != null)
                 ubicacionesVisibles[i].cubo.GetComponent<POIData>().setData(ubicacionesVisibles[i]);
@@ -79,6 +84,7 @@ public class UserLocation : MonoBehaviour
     public void daysChange(int day)
     {
         daySelected = day;
+        variables.daySelected = day;
     }
 
     public double[,] EncontrarCuadrante(float lat1, float long1, List<PointOfInterest> places)
@@ -185,8 +191,8 @@ public class UserLocation : MonoBehaviour
         //miLat = GPS.Instance.latitud;
         //miLong = GPS.Instance.longitud;
 
-        miLat = -0.12914759411639676f;
-        miLong = -78.48616997182278f;
+        miLat = -0.2184156877599296f;
+        miLong = -78.51204901265913f;
 
         ubicacionesVisibles.Clear();
         ubicacionesOcultas.Clear();
@@ -196,7 +202,7 @@ public class UserLocation : MonoBehaviour
             float distance = FormulaHaversine((float)miLat, (float)miLong, float.Parse(days[daySelected][i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(days[daySelected][i].location.lng, CultureInfo.InvariantCulture.NumberFormat));
             if (distance < 300)
             {
-                days[daySelected][i].distancia = distance.ToString();
+                days[daySelected][i].distance = distance.ToString();
                 ubicacionesVisibles.Add(days[daySelected][i]);
             }
             else

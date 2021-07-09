@@ -11,21 +11,23 @@ public class GPS : MonoBehaviour
     public float latitud;
     public float longitud;
 
+    private void Awake()
+    {
+        if (!Permission.HasUserAuthorizedPermission(Permission.FineLocation))
+        {
+            Permission.RequestUserPermission(Permission.FineLocation);
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+        StartCoroutine(GPSLocation());
+    }
+
     void Start()
     {
-        latitud = -0.12914759411639676f;
-        longitud = -78.48616997182278f;
+        latitud = -0.2184156877599296f;
+        longitud = -78.51204901265913f;
     }
-
-    private void Update()
-    {
-        //latitud = -0.12914759411639676f;
-        //longitud = -78.48616997182278f;
-
-        //latitud = latitud + 0.00001f;
-        //longitud = longitud + 0.00001f;
-    }
-
 
     IEnumerator GPSLocation()
     {
@@ -63,8 +65,9 @@ public class GPS : MonoBehaviour
     {
         if (Input.location.status == LocationServiceStatus.Running)
         {
-            latitud = Input.location.lastData.latitude;
-            longitud = Input.location.lastData.longitude;
+            //latitud = Input.location.lastData.latitude;
+            //longitud = Input.location.lastData.longitude;
+            
         }
         else
         {
@@ -72,15 +75,5 @@ public class GPS : MonoBehaviour
         }
     }
 
-    private void Awake()
-    {
-        if (!Permission.HasUserAuthorizedPermission(Permission.FineLocation))
-        {
-            Permission.RequestUserPermission(Permission.FineLocation);
-        }
-
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
-        StartCoroutine(GPSLocation());
-    }
+   
 }

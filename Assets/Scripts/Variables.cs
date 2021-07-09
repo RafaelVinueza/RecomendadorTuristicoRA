@@ -34,7 +34,34 @@ public class Variables : MonoBehaviour
     //        new PointOfInterest(-0.1259208276554583, -78.48637067637105, "Nombre", "0:00 - 24:00", "UniEducativa","")
     //};
 
+    [System.Serializable]
+    public struct localizacion
+    {
+        public float lat;
+        public float lng;
+    }
+
+    [System.Serializable]
+    public struct timeSchedule
+    {
+        public string start;
+        public string end;
+    }
+
+    [System.Serializable]
+    public struct estructuraDatos
+    {
+        public int totalDays;
+        public localizacion location;
+        public timeSchedule travelSchedule;
+        public timeSchedule luchTime;
+        public string startDate;
+        public string[] categories;
+    }
+
     public List<PointOfInterest>[] days;
+    public int daySelected;
+    public estructuraDatos serviceLoadData;
 
     public Variables()
     {
