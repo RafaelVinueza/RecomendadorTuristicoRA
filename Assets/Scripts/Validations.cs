@@ -80,16 +80,9 @@ public class Validations : MonoBehaviour
                                     variables.serviceLoadData.luchTime.end = endLunch.text.Replace(":", "");
                                     variables.serviceLoadData.location.lat = GPS.Instance.latitud;
                                     variables.serviceLoadData.location.lng = GPS.Instance.longitud;
-                                    int aux = 0;
+                                    
+                                    variables.serviceLoadData.categories = new string[placesCount];
                                     int auxi = 0;
-                                    for (int i= 0; i < togglePlaces.Count; i++)
-                                    {
-                                        if (togglePlaces[i].isOn)
-                                        {
-                                            aux++;
-                                        }
-                                    }
-                                    variables.serviceLoadData.categories = new string[aux];
 
                                     for (int i = 0; i < togglePlaces.Count; i++)
                                     {
@@ -99,7 +92,6 @@ public class Validations : MonoBehaviour
                                             auxi++;
                                         }
                                     }
-                                    var arttt = 0;
                                     return true;
                                 }
                                 else
