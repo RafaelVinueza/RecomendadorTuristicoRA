@@ -12,7 +12,6 @@ public class RotationObject : MonoBehaviour
     void Start()
     {
         locationObject = GameObject.Find("LocationObject");
-
         if(locationObject != null)
         {
             target = locationObject.transform;
@@ -22,6 +21,6 @@ public class RotationObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.LookAt(target.position);
+        transform.LookAt(new Vector3(target.position.x, target.position.y, target.position.z));
     }
 }

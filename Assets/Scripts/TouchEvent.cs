@@ -28,13 +28,13 @@ public class TouchEvent : MonoBehaviour
                             {
                                 plano.SetActive(true);
                                 TextMeshPro nombre = plano.transform.GetChild(0).gameObject.GetComponent<TextMeshPro>();
-                                TextMeshPro horario = plano.transform.GetChild(1).gameObject.GetComponent<TextMeshPro>();
+                                TextMeshPro businessStatus = plano.transform.GetChild(1).gameObject.GetComponent<TextMeshPro>();
                                 TextMeshPro tipo = plano.transform.GetChild(2).gameObject.GetComponent<TextMeshPro>();
                                 TextMeshPro distancia = plano.transform.GetChild(3).gameObject.GetComponent<TextMeshPro>();
 
                                 nombre.text = poiData.getData().name;
-                                horario.text = poiData.getData().business_status;
-                                tipo.text = poiData.getData().typePOI;
+                                businessStatus.text = poiData.getData().business_status;
+                                tipo.text = poiData.getData().type;
                                 distancia.text = poiData.getData().distance;
                             }
                             else
