@@ -18,11 +18,11 @@ public class UserLocation : MonoBehaviour
     List<PointOfInterest>[] days;
     List<string> opcionesDropDown = new List<string>();
     private int daySelected;
-    
 
+    const int range = 300;
+    
     List<PointOfInterest> ubicacionesVisibles = new List<PointOfInterest>();
     List<PointOfInterest> ubicacionesOcultas = new List<PointOfInterest>();
-
 
     void Awake()
     {
@@ -41,21 +41,34 @@ public class UserLocation : MonoBehaviour
         dropDownDays.AddOptions(opcionesDropDown);
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         //miLat = GPS.Instance.latitud;
         //miLong = GPS.Instance.longitud;
 
-        miLat = -0.12914759411639676f;
-        miLong = -78.48616997182278f;
+        miLat = -0.2184156877599296f;
+        miLong = -78.51204901265913f;
+        initializeDay();
+    }
 
+    public void daysChange(int day)
+    {
+        daySelected = day;
+        variables.daySelected = day;
+        ubicacionesVisibles.Clear();
+        ubicacionesOcultas.Clear();
+        //ubicacionesVirtuales = ;
+        initializeDay();
+    }
+
+    public void initializeDay()
+    {
         for (int i = 0; i < days[daySelected].Count; i++)
         {
             float distance = FormulaHaversine((float)miLat, (float)miLong, float.Parse(days[daySelected][i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(days[daySelected][i].location.lng, CultureInfo.InvariantCulture.NumberFormat));
             days[daySelected][i].distance = distance.ToString();
 
-            if (distance < 1000)
+            if (distance < range)
             {
                 ubicacionesVisibles.Add(days[daySelected][i]);
             }
@@ -71,7 +84,7 @@ public class UserLocation : MonoBehaviour
         {
             ubicacionesVisibles[i].cubo = Instantiate(buscarIcono("default"),
                 new Vector3((float)ubicacionesVirtuales[i, 0], 0, (float)ubicacionesVirtuales[i, 1]),
-                new Quaternion(0, 180, 0, 0));
+                Quaternion.identity);
             ubicacionesVisibles[i].cubo.transform.localScale = calcularEscala((float)TransformarMetrosUnidades(FormulaHaversine((float)miLat, (float)miLong, float.Parse(days[daySelected][i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(days[daySelected][i].location.lng, CultureInfo.InvariantCulture.NumberFormat))));
             ubicacionesVisibles[i].distance = "";
 
@@ -79,12 +92,6 @@ public class UserLocation : MonoBehaviour
                 ubicacionesVisibles[i].cubo.GetComponent<POIData>().setData(ubicacionesVisibles[i]);
 
         }
-    }
-
-    public void daysChange(int day)
-    {
-        daySelected = day;
-        variables.daySelected = day;
     }
 
     public double[,] EncontrarCuadrante(float lat1, float long1, List<PointOfInterest> places)
@@ -143,7 +150,7 @@ public class UserLocation : MonoBehaviour
         //float valor = (2f * distancia) / 30f;
         //return new Vector3(valor, valor, valor / 5);
 
-        float valor = distancia / 30f;
+        float valor = distancia / 120f;
         return new Vector3(valor, valor, valor);
     }
 
@@ -184,36 +191,33 @@ public class UserLocation : MonoBehaviour
         }
     }
 
-
-    // Update is called once per frame
     void Update()
     {
         //miLat = GPS.Instance.latitud;
         //miLong = GPS.Instance.longitud;
 
-        miLat = -0.2184156877599296f;
-        miLong = -78.51204901265913f;
-
-        ubicacionesVisibles.Clear();
-        ubicacionesOcultas.Clear();
-
-        for (int i = 0; i < days[daySelected].Count; i++)
+        for (int i = 0; i < ubicacionesVisibles.Count; i++)
         {
-            float distance = FormulaHaversine((float)miLat, (float)miLong, float.Parse(days[daySelected][i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(days[daySelected][i].location.lng, CultureInfo.InvariantCulture.NumberFormat));
-            if (distance < 300)
+            float distance = FormulaHaversine((float)miLat, (float)miLong, float.Parse(ubicacionesVisibles[i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(ubicacionesVisibles[i].location.lng, CultureInfo.InvariantCulture.NumberFormat));
+            if (distance > range)
             {
-                days[daySelected][i].distance = distance.ToString();
-                ubicacionesVisibles.Add(days[daySelected][i]);
-            }
-            else
-            {
-                ubicacionesOcultas.Add(days[daySelected][i]);
+                ubicacionesOcultas.Add(ubicacionesVisibles[i]);
+                ubicacionesVisibles.RemoveAt(i);
             }
         }
 
         for (int i = 0; i < ubicacionesOcultas.Count; i++)
         {
-            Destroy(ubicacionesOcultas[i].cubo);
+            float distance = FormulaHaversine((float)miLat, (float)miLong, float.Parse(ubicacionesOcultas[i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(ubicacionesOcultas[i].location.lng, CultureInfo.InvariantCulture.NumberFormat));
+            if (distance < range)
+            {
+                ubicacionesVisibles.Add(ubicacionesOcultas[i]);
+                ubicacionesOcultas.RemoveAt(i);
+            }
+            else
+            {
+                Destroy(ubicacionesOcultas[i].cubo);
+            }
         }
 
         ubicacionesVirtuales = EncontrarCuadrante((float)miLat, (float)miLong, ubicacionesVisibles);
@@ -224,7 +228,7 @@ public class UserLocation : MonoBehaviour
             {
                 ubicacionesVisibles[i].cubo = Instantiate(buscarIcono("default"),
                 new Vector3((float)ubicacionesVirtuales[i, 0], 0, (float)ubicacionesVirtuales[i, 1]),
-                new Quaternion(0,180,0,0));
+                Quaternion.identity);
                 ubicacionesVisibles[i].cubo.transform.localScale = calcularEscala((float)TransformarMetrosUnidades(FormulaHaversine((float)miLat, (float)miLong, float.Parse(days[daySelected][i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(days[daySelected][i].location.lng, CultureInfo.InvariantCulture.NumberFormat))));
 
                 if (ubicacionesVisibles[i].cubo.GetComponent<POIData>() != null)
