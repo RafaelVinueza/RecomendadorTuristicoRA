@@ -1,15 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MoveCamera : MonoBehaviour
 {
+    public Button closeMap;
 
     private Vector2 touchDeltaPosition;
     private GameObject botonCentrar;
     private CentrarUsuario centrarUsuario;
 
-    // Update is called once per frame
+    private void Awake()
+    {
+        closeMap.onClick.AddListener(GameObject.Find("Controller").GetComponent<ChangeScene>().LoadScene);
+    }
+
     void Update()
     {
         if(Input.touchCount > 0)
