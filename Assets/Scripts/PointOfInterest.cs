@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
 public class PointOfInterest
 {
@@ -29,7 +27,8 @@ public class PointOfInterest
 
     public PointOfInterest(){
         this.cubo = null;
-        this.typePOI = "Sin definir";
+        this.typePOI = "Type not defined";
+        this.distance = "";
     }
     
 }

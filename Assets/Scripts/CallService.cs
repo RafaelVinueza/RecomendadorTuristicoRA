@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using Mapbox.Json;
 using UnityEngine;
@@ -9,14 +8,14 @@ using UnityEngine.SceneManagement;
 public class CallService : MonoBehaviour
 {
     public static CallService Instance { set; get; }
-
-    Tour toursDays = new Tour();
-    PointOfInterest poi;
-    Schedule[] schedule;
-    List<PointOfInterest>[] days;
     public bool flag;
-    private Variables variables;
 
+    private Variables variables;
+    private Tour toursDays = new Tour();
+    private PointOfInterest poi;
+    private Schedule[] schedule;
+    private List<PointOfInterest>[] days;
+    
     private void Awake()
     {
         Instance = this;
@@ -32,10 +31,7 @@ public class CallService : MonoBehaviour
 
     //void PostData() => StartCoroutine(PostData_Coroutine());
     //    IEnumerator PostData_Coroutine()
-
-
-
-
+    
     void PostData_Coroutine()
     {
 
@@ -75,7 +71,27 @@ public class CallService : MonoBehaviour
                     if (poi.type == "poi")
                     {
                         if(poi.opening_hours != null)
+                        {
                             poi.open_hours = JsonConvert.DeserializeObject<OpenHour>(poi.opening_hours.ToString());
+
+                            if(poi.open_hours.periods != null && poi.open_hours.periods.Length > 0)
+                            {
+                                for(int k = 0; k < poi.open_hours.periods.Length; k++)
+                                {
+                                    try
+                                    {
+                                        poi.open_hours.periods[k].open = poi.open_hours.periods[k].open.Insert(2, ":");
+                                        poi.open_hours.periods[k].close = poi.open_hours.periods[k].close.Insert(2, ":");
+                                    }
+                                    catch (System.Exception)
+                                    {
+                                        poi.open_hours.periods[k] = new Period();
+                                    }
+                                    
+                                }
+                            }
+                        }
+
                         days[i].Add(poi);
                     }
                 }

@@ -1,13 +1,11 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Android;
-using UnityEngine.UI;
 
 public class GPS : MonoBehaviour
 {
 
     public static GPS Instance { set; get; }
-
     public float latitud;
     public float longitud;
 

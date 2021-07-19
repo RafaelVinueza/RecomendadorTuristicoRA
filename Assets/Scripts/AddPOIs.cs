@@ -7,40 +7,42 @@ using UnityEngine;
 
 public class AddPOIs : MonoBehaviour
 {
-    private GameObject _mapa;
-    private GameObject _controller;
-    private AbstractMap _abstractMap;
-    private Variables _variables;
+    private GameObject mapa;
+    private GameObject controller;
+    private AbstractMap abstractMap;
+    private Variables variables;
+    private PrefabItemOptions capaDefault;
+    private List<string> list_default;
 
     public GameObject prefab;
 
     void Start()
     {
-        _mapa = GameObject.Find("Map");
-        _controller = GameObject.Find("Controller");
+        mapa = GameObject.Find("Map");
+        controller = GameObject.Find("Controller");
 
-        if (_mapa != null && _controller != null)
+        if (mapa != null && controller != null)
         {
-            _abstractMap = _mapa.GetComponent<AbstractMap>();
-            _variables = _controller.GetComponent<Variables>();
+            abstractMap = mapa.GetComponent<AbstractMap>();
+            variables = controller.GetComponent<Variables>();
 
-            PrefabItemOptions capaDefault = new PrefabItemOptions();
+            capaDefault = new PrefabItemOptions();
             capaDefault.prefabItemName = "Default";
             capaDefault.spawnPrefabOptions = new SpawnPrefabOptions();
             capaDefault.spawnPrefabOptions.prefab = prefab;
             capaDefault.isActive = true;
             capaDefault.snapToTerrain = true;
             capaDefault.findByType = LocationPrefabFindBy.AddressOrLatLon;
-            List<string> list_default = new List<string>();
+            list_default = new List<string>();
             capaDefault.coordinates = new string[1];
 
-            for (int i = 0; i < _variables.days[_variables.daySelected].Count; i++)
+            for (int i = 0; i < variables.days[variables.daySelected].Count; i++)
             {
-                list_default.Add(String.Format(CultureInfo.InvariantCulture, "{0},{1}", _variables.days[_variables.daySelected][i].location.lat, _variables.days[_variables.daySelected][i].location.lng));
+                list_default.Add(String.Format(CultureInfo.InvariantCulture, "{0},{1}", variables.days[variables.daySelected][i].location.lat, variables.days[variables.daySelected][i].location.lng));
             }
 
             capaDefault.coordinates = list_default.ToArray();
-            _abstractMap.VectorData.AddPointsOfInterestSubLayer(capaDefault);
+            abstractMap.VectorData.AddPointsOfInterestSubLayer(capaDefault);
 
 
         }
