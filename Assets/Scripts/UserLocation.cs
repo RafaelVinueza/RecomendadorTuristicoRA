@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,22 +7,21 @@ public class UserLocation : MonoBehaviour
 {
     
     public List<GameObject> prefabs = new List<GameObject>();
-
-    double[,] ubicacionesVirtuales;
     public float miLat;
     public float miLong;
     public Dropdown dropDownDays;
     public Button openMap;
+
+    private double[,] ubicacionesVirtuales;
     private Variables variables;
-    List<PointOfInterest>[] days;
-    List<string> opcionesDropDown = new List<string>();
+    private List<PointOfInterest>[] days;
+    private List<string> opcionesDropDown = new List<string>();
     private int daySelected;
+    private List<PointOfInterest> ubicacionesVisibles = new List<PointOfInterest>();
+    private List<PointOfInterest> ubicacionesOcultas = new List<PointOfInterest>();
 
     const int range = 300;
     
-    List<PointOfInterest> ubicacionesVisibles = new List<PointOfInterest>();
-    List<PointOfInterest> ubicacionesOcultas = new List<PointOfInterest>();
-
     void Awake()
     {
         variables = GameObject.Find("Controller").GetComponent<Variables>();
@@ -199,6 +197,7 @@ public class UserLocation : MonoBehaviour
         for (int i = 0; i < ubicacionesVisibles.Count; i++)
         {
             float distance = FormulaHaversine((float)miLat, (float)miLong, float.Parse(ubicacionesVisibles[i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(ubicacionesVisibles[i].location.lng, CultureInfo.InvariantCulture.NumberFormat));
+            ubicacionesVisibles[i].distance = distance.ToString("0.0");
             if (distance > range)
             {
                 ubicacionesOcultas.Add(ubicacionesVisibles[i]);
@@ -209,6 +208,7 @@ public class UserLocation : MonoBehaviour
         for (int i = 0; i < ubicacionesOcultas.Count; i++)
         {
             float distance = FormulaHaversine((float)miLat, (float)miLong, float.Parse(ubicacionesOcultas[i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(ubicacionesOcultas[i].location.lng, CultureInfo.InvariantCulture.NumberFormat));
+            ubicacionesOcultas[i].distance = distance.ToString("0.0");
             if (distance < range)
             {
                 ubicacionesVisibles.Add(ubicacionesOcultas[i]);

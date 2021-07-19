@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Validations : MonoBehaviour
@@ -14,14 +13,15 @@ public class Validations : MonoBehaviour
     public InputField endTour;
     public InputField startLunch;
     public InputField endLunch;
-    public Text textError;
-    public int placesCount = 0;
-    Regex reDate = new Regex("^\\d{4}([\\-/.])(0?[1-9]|1[1-2])\\1(3[01]|[12][0-9]|0?[1-9])$");
-    Regex reHour = new Regex("^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$");
-    string todayDate;
-    private Variables variables;
     public List<string> categories;
     public List<Toggle> togglePlaces;
+    public Text textError;
+    public int placesCount = 0;
+
+    private Regex reDate = new Regex("^\\d{4}([\\-/.])(0?[1-9]|1[1-2])\\1(3[01]|[12][0-9]|0?[1-9])$");
+    private Regex reHour = new Regex("^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$");
+    private string todayDate;
+    private Variables variables;
 
     private void Awake()
     {
