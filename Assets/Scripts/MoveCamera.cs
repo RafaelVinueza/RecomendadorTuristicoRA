@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class MoveCamera : MonoBehaviour
@@ -10,6 +8,7 @@ public class MoveCamera : MonoBehaviour
     private Vector2 touchDeltaPosition;
     private GameObject botonCentrar;
     private CentrarUsuario centrarUsuario;
+    private Touch touchZero;
 
     private void Awake()
     {
@@ -20,7 +19,7 @@ public class MoveCamera : MonoBehaviour
     {
         if(Input.touchCount > 0)
         {
-            Touch touchZero = Input.GetTouch(0);
+            touchZero = Input.GetTouch(0);
             if(touchZero.phase == TouchPhase.Moved)
             {
 

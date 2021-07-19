@@ -1,14 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class RotationObject : MonoBehaviour
 {
 
-    GameObject locationObject;
-    Transform target;
-
-    // Start is called before the first frame update
+    private GameObject locationObject;
+    private Transform target;
+    
     void Start()
     {
         locationObject = GameObject.Find("LocationObject");
@@ -17,8 +14,7 @@ public class RotationObject : MonoBehaviour
             target = locationObject.transform;
         }
     }
-
-    // Update is called once per frame
+    
     void Update()
     {
         transform.LookAt(new Vector3(target.position.x, target.position.y, target.position.z));

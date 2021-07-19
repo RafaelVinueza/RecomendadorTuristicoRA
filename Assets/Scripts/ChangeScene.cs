@@ -1,12 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class ChangeScene : MonoBehaviour
 {
     Validations validations;
     string errorDatosServicio;
+    string sceneActual;
 
     private void Awake()
     {
@@ -25,7 +24,7 @@ public class ChangeScene : MonoBehaviour
 
     public void LoadScene()
     {
-        string sceneActual = SceneManager.GetActiveScene().name;
+        sceneActual = SceneManager.GetActiveScene().name;
         switch (sceneActual)
         {
             case "SceneForm":
