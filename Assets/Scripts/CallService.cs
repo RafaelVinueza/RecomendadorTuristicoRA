@@ -15,6 +15,7 @@ public class CallService : MonoBehaviour
     private PointOfInterest poi;
     private Schedule[] schedule;
     private List<PointOfInterest>[] days;
+    private string[] splitIcon;
     
     private void Awake()
     {
@@ -92,6 +93,19 @@ public class CallService : MonoBehaviour
                             }
                         }
 
+                        splitIcon = poi.icon.Split('/');
+                        splitIcon = splitIcon[splitIcon.Length - 1].Split('-');
+
+                        if(splitIcon[0] == "generic_business")
+                        {
+                            poi.typePOI = findTypeByName(poi.name);
+                        }
+                        else
+                        {
+                            poi.typePOI = formatType(splitIcon[0]);
+                        }
+                        
+
                         days[i].Add(poi);
                     }
                 }
@@ -109,4 +123,72 @@ public class CallService : MonoBehaviour
             }
         }
     }
+
+    private string findTypeByName(string name)
+    {
+        name = name.ToLower();
+        string[] words = name.Split(' ');
+
+        for(int i = 0; i < words.Length; i++)
+        {
+            switch (words[i])
+            {
+                case "museo":
+                    return "Museum";
+                case "restaurante":
+                    return "Restaurant";
+                case "acuario":
+                    return "Aquarium";
+                case "cementerio":
+                    return "Cementery";
+                case "mesquita":
+                    return "Mosque";
+                case "galeria de arte":
+                    return "Museum";
+                case "estadio":
+                    return "Stadium";
+                case "iglesia":
+                    return "Church";
+                case "parque de atracciones":
+                    return "Park";
+                case "templo hindu":
+                    return "Hindu Temple";
+                case "zoologico":
+                    return "Zoo";
+                case "parque":
+                    return "Park";
+            }
+        }
+        
+        return "Default";
+    }
+
+    private string formatType(string type)
+    {
+
+        switch (type)
+        {
+            case "museum":
+                return "Museum";
+            case "shopping":
+                return "Shopping";
+            case "cementery_grave":
+                return "Cementery";
+            case "worship_islam":
+                return "Mosque";
+            case "stadium":
+                return "Stadium";
+            case "worship_general":
+                return "Church";
+            case "park":
+                return "Park";
+            case "worship_hindu":
+                return "Hindu Temple";
+
+            default:
+                return "Default";
+        }
+    }
+
+
 }
