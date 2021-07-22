@@ -12,6 +12,7 @@ public class PointOfInterest
     public OpenHour open_hours;
     public float rating;
     public string website;
+    public string icon;
     public Location location = new Location();
     
     public string typePOI;
