@@ -119,6 +119,7 @@ namespace Mapbox.Unity.MeshGeneration.Interfaces
 							_prefabModifier = AddOrCreateGameObjectModifier<PrefabModifier>();
 							_prefabModifier.SetProperties(itemProperties.spawnPrefabOptions);
 							_prefabModifier.ModifierHasChanged += UpdatePois;
+                            //_prefabModifier
 						}
 					}
 					break;

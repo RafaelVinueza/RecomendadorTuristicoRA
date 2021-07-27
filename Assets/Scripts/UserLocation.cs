@@ -41,11 +41,10 @@ public class UserLocation : MonoBehaviour
 
     void Start()
     {
-        //miLat = GPS.Instance.latitud;
-        //miLong = GPS.Instance.longitud;
-
-        miLat = -0.2184156877599296f;
-        miLong = -78.51204901265913f;
+        miLat = GPS.Instance.latitud;
+        miLong = GPS.Instance.longitud;
+        //miLat = -0.2184156877599296f;
+        //miLong = -78.51204901265913f;
         initializeDay();
     }
 
