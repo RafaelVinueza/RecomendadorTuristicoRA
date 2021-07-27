@@ -23,10 +23,10 @@ public class GPS : MonoBehaviour
 
     void Start()
     {
-        //latitud = -0.12941428659107065f;
-        //longitud = -78.48624782279018f;
-        latitud = -0.22092957856294237f;
-        longitud = -78.5139782650852f;
+        latitud = -0.12941428659107065f;
+        longitud = -78.48624782279018f;
+        //latitud = -0.22092957856294237f;
+        //longitud = -78.5139782650852f;
     }
 
     IEnumerator GPSLocation()
