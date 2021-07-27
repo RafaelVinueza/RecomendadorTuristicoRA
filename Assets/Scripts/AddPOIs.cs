@@ -3,8 +3,8 @@ using Mapbox.Unity.MeshGeneration.Factories;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AddPOIs : MonoBehaviour
 {
@@ -21,6 +21,12 @@ public class AddPOIs : MonoBehaviour
     private bool primeraVez;
     public GameObject prefab;
     public GameObject prefabDirection;
+    public Slider slider;
+
+    void Awake()
+    {
+        slider.value = 8;
+    }
 
     void Start()
     {
@@ -64,7 +70,7 @@ public class AddPOIs : MonoBehaviour
             player = GameObject.Find("Player");
             poiObjects = new List<GameObject>();
 
-            for (int i = 1; i <= mapa.transform.childCount - 1; i++)
+            for (int i = 0; i < mapa.transform.childCount; i++)
             {
                 GameObject tile = mapa.transform.GetChild(i).gameObject;
 
@@ -99,20 +105,14 @@ public class AddPOIs : MonoBehaviour
 
             poiObjects.Sort((x, y) => x.GetComponent<POIMapboxName>().position.CompareTo(y.GetComponent<POIMapboxName>().position));
 
-            Debug.Log(1 + poiObjects[0].GetComponent<POIMapboxName>().name);
-            Debug.Log(2 + poiObjects[1].GetComponent<POIMapboxName>().name);
-            Debug.Log(3 + poiObjects[2].GetComponent<POIMapboxName>().name);
-            Debug.Log(4 + poiObjects[3].GetComponent<POIMapboxName>().name);
-            Debug.Log(5 + poiObjects[4].GetComponent<POIMapboxName>().name);
-            Debug.Log(6 + poiObjects[5].GetComponent<POIMapboxName>().name);
-            Debug.Log(7 + poiObjects[6].GetComponent<POIMapboxName>().name);
-            Debug.Log(8 + poiObjects[7].GetComponent<POIMapboxName>().name);
-            //createDirections(new Transform[] { player.transform, poiObjects[0].transform });
+            createDirections(new Transform[] { player.transform, poiObjects[0].transform });
 
-            //for (int i = 0; i < poiObjects.Count - 1; i++)
-            //{
-            //    createDirections(new Transform[] { poiObjects[i].transform, poiObjects[i + 1].transform });
-            //}
+            for (int i = 0; i < poiObjects.Count - 1; i++)
+            {
+                createDirections(new Transform[] { poiObjects[i].transform, poiObjects[i + 1].transform });
+            }
+
+            //slider.value = 15;
 
             primeraVez = false;
 
