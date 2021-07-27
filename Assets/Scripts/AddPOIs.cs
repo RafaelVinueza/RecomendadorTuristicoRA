@@ -3,6 +3,7 @@ using Mapbox.Unity.MeshGeneration.Factories;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using UnityEngine;
 
 public class AddPOIs : MonoBehaviour
@@ -14,10 +15,10 @@ public class AddPOIs : MonoBehaviour
     private Variables variables;
     private PrefabItemOptions capaDefault;
     private List<string> list_default;
+    private List<ListPois> lista_pois;
     private List<GameObject> poiObjects;
-    private bool primeraVez;
     private Transform elementoActual;
-
+    private bool primeraVez;
     public GameObject prefab;
     public GameObject prefabDirection;
 
@@ -50,8 +51,6 @@ public class AddPOIs : MonoBehaviour
             capaDefault.coordinates = list_default.ToArray();
             abstractMap.VectorData.AddPointsOfInterestSubLayer(capaDefault);
 
-            var poi = abstractMap.VectorData.GetPointsOfInterestSubLayerAtIndex(0);
-            var stop = 0;
         }
     }
 
@@ -75,46 +74,85 @@ public class AddPOIs : MonoBehaviour
                 }
             }
 
-            elementoActual = player.transform;
-            while (poiObjects.Count > 0)
+
+            distanciasDos();
+
+            poiObjects.Sort((x, y) => Vector3.Distance(player.transform.position, x.transform.position).CompareTo(Vector3.Distance(player.transform.position, y.transform.position)));
+            lista_pois.Sort((x, y) => x.Distance.CompareTo(y.Distance));
+
+            Debug.Log(lista_pois);
+
+            for (int i = 0; i < poiObjects.Count; i++)
             {
-                poiObjects = generarPares(poiObjects);
+                poiObjects[i].AddComponent<POIMapboxName>();
+                poiObjects[i].GetComponent<POIMapboxName>().name = lista_pois[i].Name;
             }
 
+            for (int i = 0; i < variables.days[variables.daySelected].Count; i++)
+            {
+                for (int j = 0; j < poiObjects.Count; j++)
+                {
+                    if (poiObjects[j].GetComponent<POIMapboxName>().name == variables.days[variables.daySelected][i].name)
+                        poiObjects[j].GetComponent<POIMapboxName>().position = i;
+                }
+            }
+
+            poiObjects.Sort((x, y) => x.GetComponent<POIMapboxName>().position.CompareTo(y.GetComponent<POIMapboxName>().position));
+
+            Debug.Log(1 + poiObjects[0].GetComponent<POIMapboxName>().name);
+            Debug.Log(2 + poiObjects[1].GetComponent<POIMapboxName>().name);
+            Debug.Log(3 + poiObjects[2].GetComponent<POIMapboxName>().name);
+            Debug.Log(4 + poiObjects[3].GetComponent<POIMapboxName>().name);
+            Debug.Log(5 + poiObjects[4].GetComponent<POIMapboxName>().name);
+            Debug.Log(6 + poiObjects[5].GetComponent<POIMapboxName>().name);
+            Debug.Log(7 + poiObjects[6].GetComponent<POIMapboxName>().name);
+            Debug.Log(8 + poiObjects[7].GetComponent<POIMapboxName>().name);
+            //createDirections(new Transform[] { player.transform, poiObjects[0].transform });
+
+            //for (int i = 0; i < poiObjects.Count - 1; i++)
+            //{
+            //    createDirections(new Transform[] { poiObjects[i].transform, poiObjects[i + 1].transform });
+            //}
+
             primeraVez = false;
-            var stop = 0;
 
         }
 
     }
 
-
-    private List<GameObject> generarPares(List<GameObject> poiObjects)
+    public void createDirections(Transform[] transforms)
     {
-        GameObject poiMasCercano = poiObjects[0];
-        float distancia = Vector3.Distance(elementoActual.position, poiObjects[0].transform.position);
-
-        for (int i = 1; i <= poiObjects.Count; i++)
-        {
-            if (i < poiObjects.Count && distancia > Vector3.Distance(elementoActual.position, poiObjects[i].transform.position))
-            {
-                distancia = Vector3.Distance(elementoActual.position, poiObjects[i].transform.position);
-                poiMasCercano = poiObjects[i];
-            }
-        }
-
-        Debug.Log("Posicion Elemento Actual: " + elementoActual.position + " Posicion Mas Cercano: " + poiMasCercano.transform.position);
-        //aqui generar el distance entre el elementoActual y el poiMasCercano
         GameObject direction = Instantiate(prefabDirection);
         DirectionsFactory directionsFactory = direction.GetComponent<DirectionsFactory>();
-        Transform[] waypoints = {elementoActual, poiMasCercano.transform};
+        Transform[] waypoints = transforms;
         directionsFactory.addWaypoints(waypoints);
+    }
+    
+    public float FormulaHaversine(float lat1, float long1, float lat2, float long2)
+    {
+        float earthRad = 6371000;
+        float lRad1 = lat1 * Mathf.Deg2Rad;
+        float lRad2 = lat2 * Mathf.Deg2Rad;
+        float dLat = (lat2 - lat1) * Mathf.Deg2Rad;
+        float dLong = (long2 - long1) * Mathf.Deg2Rad;
+        float a = Mathf.Sin(dLat / 2.0f) * Mathf.Sin(dLat / 2.0f) +
+            Mathf.Cos(lRad1) * Mathf.Cos(lRad2) *
+            Mathf.Sin(dLong / 2.0f) * Mathf.Sin(dLong / 2.0f);
+        float c = 2 * Mathf.Atan2(Mathf.Sqrt(a), Mathf.Sqrt(1 - a));
+        return earthRad * c;
+    }
 
-        
-        elementoActual = poiMasCercano.transform;
-        poiObjects.Remove(poiMasCercano);
+    public void distanciasDos()
+    {
+            lista_pois = new List<ListPois>();
 
-        return poiObjects;
+            for (int i = 0; i < variables.days[variables.daySelected].Count; i++)
+            {
+            lista_pois.Add(new ListPois(variables.days[variables.daySelected][i].name,
+                FormulaHaversine(GPS.Instance.latitud, GPS.Instance.longitud,
+                float.Parse(variables.days[0][i].location.lat, CultureInfo.InvariantCulture.NumberFormat),
+                float.Parse(variables.days[0][i].location.lng, CultureInfo.InvariantCulture.NumberFormat))));
+            }        
     }
 
 }
