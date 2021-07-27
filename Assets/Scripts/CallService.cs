@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using Mapbox.Json;
 using UnityEngine;
@@ -26,13 +27,13 @@ public class CallService : MonoBehaviour
     void Start()
     {
         //StartCoroutine(PostData_Coroutine());
-        //GameObject.Find("ButtonSubmit").GetComponent<Button>().onClick.AddListener(PostData_Coroutine);
         PostData_Coroutine();
     }
 
     //void PostData() => StartCoroutine(PostData_Coroutine());
     //    IEnumerator PostData_Coroutine()
-    
+
+
     void PostData_Coroutine()
     {
 
