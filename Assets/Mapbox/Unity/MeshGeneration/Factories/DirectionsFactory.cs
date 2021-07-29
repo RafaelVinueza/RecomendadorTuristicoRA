@@ -138,6 +138,8 @@ namespace Mapbox.Unity.MeshGeneration.Factories
 				_directionsGO.Destroy();
 			}
 			_directionsGO = new GameObject("direction waypoint " + " entity");
+            _directionsGO.tag = "DirectionWaypoint";
+            _directionsGO.transform.parent = this.transform;
 			var mesh = _directionsGO.AddComponent<MeshFilter>().mesh;
 			mesh.subMeshCount = data.Triangles.Count;
 

@@ -19,14 +19,14 @@ public class AddPOIs : MonoBehaviour
     private List<GameObject> poiObjects;
     private Transform elementoActual;
     private bool primeraVez;
+    private List<string> opcionesDropDown = new List<string>();
+    private int placeSelected;
+
     public GameObject prefab;
     public GameObject prefabDirection;
     public Slider slider;
+    public Dropdown dropDownPlaces;
 
-    void Awake()
-    {
-        slider.value = 8;
-    }
 
     void Start()
     {
@@ -57,11 +57,19 @@ public class AddPOIs : MonoBehaviour
             capaDefault.coordinates = list_default.ToArray();
             abstractMap.VectorData.AddPointsOfInterestSubLayer(capaDefault);
 
+            dropDownPlaces.ClearOptions();
+
+            for (int i = 0; i < variables.days[variables.daySelected].Count; i++)
+            {
+                opcionesDropDown.Add("Place " + (i + 1));
+            }
+            
+            dropDownPlaces.AddOptions(opcionesDropDown);
+
         }
     }
-
-
-    private void Update()
+    
+    private void LateUpdate()
     {
 
         if (primeraVez)
@@ -79,14 +87,13 @@ public class AddPOIs : MonoBehaviour
                     poiObjects.Add(tile.transform.GetChild(j).gameObject);
                 }
             }
-
-
+            
             distanciasDos();
 
             poiObjects.Sort((x, y) => Vector3.Distance(player.transform.position, x.transform.position).CompareTo(Vector3.Distance(player.transform.position, y.transform.position)));
             lista_pois.Sort((x, y) => x.Distance.CompareTo(y.Distance));
 
-            Debug.Log(lista_pois);
+            //Debug.Log(lista_pois);
 
             for (int i = 0; i < poiObjects.Count; i++)
             {
@@ -107,17 +114,38 @@ public class AddPOIs : MonoBehaviour
 
             createDirections(new Transform[] { player.transform, poiObjects[0].transform });
 
-            for (int i = 0; i < poiObjects.Count - 1; i++)
-            {
-                createDirections(new Transform[] { poiObjects[i].transform, poiObjects[i + 1].transform });
-            }
+            //for (int i = 0; i < poiObjects.Count - 1; i++)
+            //{
+            //    createDirections(new Transform[] { poiObjects[i].transform, poiObjects[i + 1].transform });
+            //}
 
-            //slider.value = 15;
-
+            slider.value = 15;
             primeraVez = false;
 
         }
+        
+        foreach (var way in GameObject.FindGameObjectsWithTag("DirectionWaypoint"))
+        {
+            if(way.transform.parent == null)
+                way.Destroy();
+        }
 
+    }
+
+    public void placeChange(int place)
+    {
+        placeSelected = place;
+
+        foreach (var direction in GameObject.FindGameObjectsWithTag("Direction"))
+        {
+            direction.Destroy();
+        }
+
+        if(placeSelected == 0)
+            createDirections(new Transform[] { player.transform, poiObjects[0].transform });
+        else
+            createDirections(new Transform[] { poiObjects[placeSelected - 1].transform, poiObjects[placeSelected].transform });
+        
     }
 
     public void createDirections(Transform[] transforms)
@@ -148,7 +176,7 @@ public class AddPOIs : MonoBehaviour
 
             for (int i = 0; i < variables.days[variables.daySelected].Count; i++)
             {
-            lista_pois.Add(new ListPois(variables.days[variables.daySelected][i].name,
+                lista_pois.Add(new ListPois(variables.days[variables.daySelected][i].name,
                 FormulaHaversine(GPS.Instance.latitud, GPS.Instance.longitud,
                 float.Parse(variables.days[0][i].location.lat, CultureInfo.InvariantCulture.NumberFormat),
                 float.Parse(variables.days[0][i].location.lng, CultureInfo.InvariantCulture.NumberFormat))));
