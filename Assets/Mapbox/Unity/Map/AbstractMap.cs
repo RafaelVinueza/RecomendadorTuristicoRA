@@ -38,7 +38,7 @@ namespace Mapbox.Unity.Map
 		private List<UnwrappedTileId> tilesToProcess;
         private double _latitud;
         private double _longitud;
-        private float _zoomUsuario = 15;
+        private float _zoomUsuario = 8;
         private GameObject _controller;
         private GPS _gps;
         private GameObject _botonCentrar;
