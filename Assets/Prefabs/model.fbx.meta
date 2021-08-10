@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 9acb9d0ea7443804396628d4c08906a4
+guid: cdf33a06da4ebe849b936bd37223772c
 ModelImporter:
   serializedVersion: 25
   internalIDToNameTable: []
@@ -8,17 +8,17 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Material.001
-    second: {fileID: 2100000, guid: 3a951ba635c644f4cb539e8db2c66e50, type: 2}
+    second: {fileID: 2100000, guid: 65b3cc1b8588bdc4e9d0463747469f8c, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Material.002
-    second: {fileID: 2100000, guid: bacddec420295d848a422f30e663135a, type: 2}
+    second: {fileID: 2100000, guid: 65b3cc1b8588bdc4e9d0463747469f8c, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: carrito-de-supermercado
-    second: {fileID: 2100000, guid: 909e27508c1d5ae4894ea323298def87, type: 2}
+    second: {fileID: 2100000, guid: 65b3cc1b8588bdc4e9d0463747469f8c, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
@@ -55,8 +55,8 @@ ModelImporter:
     useSRGBMaterialColor: 1
     importVisibility: 1
     importBlendShapes: 1
-    importCameras: 0
-    importLights: 0
+    importCameras: 1
+    importLights: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
