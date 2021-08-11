@@ -114,6 +114,7 @@ public class AddPOIs : MonoBehaviour
 
             createDirections(new Transform[] { player.transform, poiObjects[0].transform });
 
+            //para generar todos los caminos a los pois
             //for (int i = 0; i < poiObjects.Count - 1; i++)
             //{
             //    createDirections(new Transform[] { poiObjects[i].transform, poiObjects[i + 1].transform });
@@ -121,15 +122,19 @@ public class AddPOIs : MonoBehaviour
 
             slider.value = 15;
             primeraVez = false;
-
         }
         
         foreach (var way in GameObject.FindGameObjectsWithTag("DirectionWaypoint"))
         {
-            if(way.transform.parent == null)
-                way.Destroy();
-        }
 
+            if (way.transform.parent == null)
+                way.Destroy();
+
+            if (slider.value < 12)
+                way.SetActive(false);
+            else
+                way.SetActive(true);
+        }
     }
 
     public void placeChange(int place)

@@ -52,6 +52,10 @@ public class UserLocation : MonoBehaviour
     {
         daySelected = day;
         variables.daySelected = day;
+
+        foreach(PointOfInterest poi in ubicacionesVisibles)
+            poi.cubo.Destroy();
+
         ubicacionesVisibles.Clear();
         ubicacionesOcultas.Clear();
         //ubicacionesVirtuales = ;

@@ -1871,8 +1871,6 @@ MonoBehaviour:
   endTour: {fileID: 1359163311}
   startLunch: {fileID: 370857458}
   endLunch: {fileID: 1199530919}
-  textError: {fileID: 413918495}
-  placesCount: 0
   categories: []
   togglePlaces:
   - {fileID: 671899705}
@@ -1888,6 +1886,8 @@ MonoBehaviour:
   - {fileID: 1354405367}
   - {fileID: 921321528}
   - {fileID: 1492620267}
+  textError: {fileID: 413918495}
+  placesCount: 0
 --- !u!1 &413918494
 GameObject:
   m_ObjectHideFlags: 0
@@ -5550,7 +5550,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Number days
+  m_Text: Number of days
 --- !u!222 &1379418742
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -54,86 +54,124 @@ public class Validations : MonoBehaviour
             placesCount--;
     }
 
+    public bool validateSize(string name, int maxSize, int minSize, InputField field)
+    {
+        if (field.text.Length > maxSize || field.text.Length < minSize)
+        {
+            textError.text = name + " field must have a maximum of " + maxSize + " characters and a minimum of " + minSize + " characters";
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
     public bool validate()
     {
-        //if (validateDate() && validateHour(startTour) && validateHour(endLunch) && validateHour(startLunch) && validateHour(endLunch))
-        if (validateDate())
+        if(validateSize("Total Days", 1, 1, totalDays) && validateSize("Start Date", 10, 10, startDate) && validateSize("Start of Tours", 5, 5, startTour ) && validateSize("End of Tours", 5, 5, endTour) && validateSize("Start of Lunch", 5, 5, startLunch) && validateSize("End of Lunch", 5, 5, endLunch))
         {
-            if (validateHour(startTour))
+            if (validateDate())
             {
-                if (validateHour(endTour))
+                if (validateHour(startTour))
                 {
-                    if (validateHour(startLunch))
+                    if (validateHour(endTour))
                     {
                         if (validateHour(startLunch))
                         {
-                            todayDate = DateTime.UtcNow.Date.ToString("yyyy/MM/dd");
-                            if (DateTime.Compare(Convert.ToDateTime(startDate.text), Convert.ToDateTime(todayDate)) >= 0)
+                            if (validateHour(startLunch))
                             {
-                                if (placesCount > 0)
+                                todayDate = DateTime.UtcNow.Date.ToString("yyyy/MM/dd");
+                                if (DateTime.Compare(Convert.ToDateTime(startDate.text), Convert.ToDateTime(todayDate)) >= 0)
                                 {
-                                    variables.serviceLoadData.totalDays = int.Parse(totalDays.text,CultureInfo.InvariantCulture.NumberFormat);
-                                    variables.serviceLoadData.startDate = startDate.text;
-                                    variables.serviceLoadData.travelSchedule.start = startTour.text.Replace(":","");
-                                    variables.serviceLoadData.travelSchedule.end = endTour.text.Replace(":", "");
-                                    variables.serviceLoadData.luchTime.start = startLunch.text.Replace(":", "");
-                                    variables.serviceLoadData.luchTime.end = endLunch.text.Replace(":", "");
-                                    variables.serviceLoadData.location.lat = GPS.Instance.latitud;
-                                    variables.serviceLoadData.location.lng = GPS.Instance.longitud;
-                                    
-                                    variables.serviceLoadData.categories = new string[placesCount];
-                                    int auxi = 0;
-
-                                    for (int i = 0; i < togglePlaces.Count; i++)
+                                    if (DateTime.Compare(new DateTime(2021, 02, 02, int.Parse(startTour.text.Split(':')[0]), int.Parse(startTour.text.Split(':')[1]), 0), new DateTime(2021, 02, 02, int.Parse(endTour.text.Split(':')[0]), int.Parse(endTour.text.Split(':')[1]), 0)) < 0)
                                     {
-                                        if (togglePlaces[i].isOn)
+                                        if (DateTime.Compare(new DateTime(2021, 02, 02, int.Parse(startLunch.text.Split(':')[0]), int.Parse(startLunch.text.Split(':')[1]), 0), new DateTime(2021, 02, 02, int.Parse(endLunch.text.Split(':')[0]), int.Parse(endLunch.text.Split(':')[1]), 0)) < 0)
                                         {
-                                            variables.serviceLoadData.categories[auxi] = categories[i];
-                                            auxi++;
+                                            if (placesCount > 0)
+                                            {
+                                                variables.serviceLoadData.totalDays = int.Parse(totalDays.text, CultureInfo.InvariantCulture.NumberFormat);
+                                                variables.serviceLoadData.startDate = startDate.text;
+                                                variables.serviceLoadData.travelSchedule.start = startTour.text.Replace(":", "");
+                                                variables.serviceLoadData.travelSchedule.end = endTour.text.Replace(":", "");
+                                                variables.serviceLoadData.luchTime.start = startLunch.text.Replace(":", "");
+                                                variables.serviceLoadData.luchTime.end = endLunch.text.Replace(":", "");
+                                                variables.serviceLoadData.location.lat = GPS.Instance.latitud;
+                                                variables.serviceLoadData.location.lng = GPS.Instance.longitud;
+
+                                                variables.serviceLoadData.categories = new string[placesCount];
+                                                int auxi = 0;
+
+                                                for (int i = 0; i < togglePlaces.Count; i++)
+                                                {
+                                                    if (togglePlaces[i].isOn)
+                                                    {
+                                                        variables.serviceLoadData.categories[auxi] = categories[i];
+                                                        auxi++;
+                                                    }
+                                                }
+
+                                                return true;
+                                            }
+                                            else
+                                            {
+                                                textError.text = "Choice at least one place";
+                                                return false;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            textError.text = "End hour for lunch cannot be earlier than start hour";
+                                            return false;
                                         }
                                     }
-                                    return true;
+                                    else
+                                    {
+                                        textError.text = "End hour for tours cannot be earlier than start hour";
+                                        return false;
+                                    }
                                 }
                                 else
                                 {
-                                    textError.text = "Choice at least one place";
+                                    textError.text = "Start Date entered is less than today's date";
                                     return false;
                                 }
                             }
                             else
                             {
-                                textError.text = "Start Date entered is less than today's date";
+                                textError.text = "End hour for lunch is not in the correct format (HH:mm)";
                                 return false;
                             }
                         }
                         else
                         {
-                            textError.text = "End hour for lunch is not in the correct format (HH:mm)";
+                            textError.text = "Start hour for lunch is not in the correct format (HH:mm)";
                             return false;
                         }
                     }
                     else
                     {
-                        textError.text = "Start hour for lunch is not in the correct format (HH:mm)";
+                        textError.text = "End hour for tour is not in the correct format (HH:mm)";
                         return false;
                     }
                 }
                 else
                 {
-                    textError.text = "End hour for tour is not in the correct format (HH:mm)";
+                    textError.text = "Start hour for tour is not in the correct format (HH:mm)";
                     return false;
                 }
             }
             else
             {
-                textError.text = "Start hour for tour is not in the correct format (HH:mm)";
+                textError.text = "Start date is not in the correct format (yyyy/mm/dd)";
                 return false;
             }
         }
         else
         {
-            textError.text = "Start date is not in the correct format (yyyy/mm/dd)";
             return false;
         }
+
+        
     }
 }
