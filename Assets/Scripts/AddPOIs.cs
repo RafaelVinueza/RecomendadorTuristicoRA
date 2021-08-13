@@ -112,7 +112,7 @@ public class AddPOIs : MonoBehaviour
 
             poiObjects.Sort((x, y) => x.GetComponent<POIMapboxName>().position.CompareTo(y.GetComponent<POIMapboxName>().position));
 
-            createDirections(new Transform[] { player.transform, poiObjects[0].transform });
+            //createDirections(new Transform[] { player.transform, poiObjects[0].transform });
 
             //para generar todos los caminos a los pois
             //for (int i = 0; i < poiObjects.Count - 1; i++)
@@ -135,21 +135,45 @@ public class AddPOIs : MonoBehaviour
             else
                 way.SetActive(true);
         }
+
+        if(GameObject.FindGameObjectsWithTag("Direction").Length < 1 && poiObjects.Count < 2)
+        {
+            poiObjects = new List<GameObject>();
+
+            for (int i = 0; i < mapa.transform.childCount; i++)
+            {
+                GameObject tile = mapa.transform.GetChild(i).gameObject;
+
+                for (int j = 0; j < tile.transform.childCount; j++)
+                {
+                    poiObjects.Add(tile.transform.GetChild(j).gameObject);
+                }
+            }
+
+            createDirections(new Transform[] { player.transform, poiObjects[0].transform });
+        }
     }
 
     public void placeChange(int place)
     {
         placeSelected = place;
 
+        abstractMap.VectorData.RemovePointsOfInterestSubLayer(capaDefault);
+        list_default.Clear();
+        list_default.Add(String.Format(CultureInfo.InvariantCulture, "{0},{1}", variables.days[variables.daySelected][place].location.lat, variables.days[variables.daySelected][place].location.lng));
+        capaDefault.coordinates = list_default.ToArray();
+        abstractMap.VectorData.AddPointsOfInterestSubLayer(capaDefault);
+        poiObjects.Clear();
+
         foreach (var direction in GameObject.FindGameObjectsWithTag("Direction"))
         {
             direction.Destroy();
         }
 
-        if(placeSelected == 0)
-            createDirections(new Transform[] { player.transform, poiObjects[0].transform });
-        else
-            createDirections(new Transform[] { poiObjects[placeSelected - 1].transform, poiObjects[placeSelected].transform });
+        //if(placeSelected == 0)
+        //    createDirections(new Transform[] { player.transform, poiObjects[0].transform });
+        //else
+        //    createDirections(new Transform[] { poiObjects[placeSelected - 1].transform, poiObjects[placeSelected].transform });
         
     }
 
