@@ -26,17 +26,18 @@ public class CallService : MonoBehaviour
 
     void Start()
     {
-        //StartCoroutine(PostData_Coroutine());
-        PostData_Coroutine();
+        StartCoroutine(PostData_Coroutine());
+        //PostData_Coroutine();
     }
 
     //void PostData() => StartCoroutine(PostData_Coroutine());
-    //    IEnumerator PostData_Coroutine()
+    //    void PostData_Coroutine()
 
 
 
 
-    void PostData_Coroutine()
+
+    IEnumerator PostData_Coroutine()
     {
 
         var request = new UnityWebRequest("http://localhost:8080/ttdp", "POST");
@@ -66,7 +67,7 @@ public class CallService : MonoBehaviour
             Debug.Log("Status Code: " + request.responseCode);
             //var respuesta = JsonUtility.FromJson<>(request.downloadHandler.text);
 
-            schedule = JsonConvert.DeserializeObject<Schedule[]>(respuesta);
+            schedule = JsonConvert.DeserializeObject<Schedule[]>(request.downloadHandler.text);
 
             days = new List<PointOfInterest>[schedule.Length];
 

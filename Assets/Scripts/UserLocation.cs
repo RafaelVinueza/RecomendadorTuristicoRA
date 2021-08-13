@@ -187,6 +187,20 @@ public class UserLocation : MonoBehaviour
                 return prefabs[13];
             case "Supermarket":
                 return prefabs[14];
+            case "Amusement":
+                return prefabs[15];
+            case "Aquarium":
+                return prefabs[16];
+            case "Cementery":
+                return prefabs[17];
+            case "Temple":
+                return prefabs[18];
+            case "Mosque":
+                return prefabs[19];
+            case "Stadium":
+                return prefabs[19];
+            case "Zoo":
+                return prefabs[19];
             default:
                 return prefabs[0];
         }
