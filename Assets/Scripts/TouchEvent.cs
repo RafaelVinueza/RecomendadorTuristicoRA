@@ -27,6 +27,8 @@ public class TouchEvent : MonoBehaviour
 
                             if (!plano.activeInHierarchy)
                             {
+                                //para cambiar el material al plano segun corresponda a su poi
+                                //plano.GetComponent<Renderer>().material = 
                                 plano.SetActive(true);
                                 TextMeshPro name = plano.transform.GetChild(0).gameObject.GetComponent<TextMeshPro>();
                                 TextMeshPro businessStatus = plano.transform.GetChild(1).gameObject.GetComponent<TextMeshPro>();
