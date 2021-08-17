@@ -30,6 +30,7 @@ public class ChangeScene : MonoBehaviour
             case "SceneForm":
                 if (validations.validate())
                 {
+                    Screen.orientation = ScreenOrientation.LandscapeLeft;
                     SceneManager.LoadScene("SceneLoading");
                 }
                 break;
