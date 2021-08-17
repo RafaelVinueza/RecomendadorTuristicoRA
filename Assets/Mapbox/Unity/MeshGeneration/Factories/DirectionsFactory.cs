@@ -79,6 +79,7 @@ namespace Mapbox.Unity.MeshGeneration.Factories
 			{
 				wp[i] = _waypoints[i].GetGeoPosition(_map.CenterMercator, _map.WorldRelativeScale);
 			}
+            
 			var _directionResource = new DirectionResource(wp, RoutingProfile.Driving);
 			_directionResource.Steps = true;
 			_directions.Query(_directionResource, HandleDirectionsResponse);
@@ -127,9 +128,8 @@ namespace Mapbox.Unity.MeshGeneration.Factories
 			{
 				mod.Run(feat, meshData, _map.WorldRelativeScale);
 			}
-
-			CreateGameObject(meshData);
-		}
+            CreateGameObject(meshData);
+        }
 
 		GameObject CreateGameObject(MeshData data)
 		{
@@ -160,6 +160,7 @@ namespace Mapbox.Unity.MeshGeneration.Factories
 
 			mesh.RecalculateNormals();
 			_directionsGO.AddComponent<MeshRenderer>().material = _material;
+            _directionsGO.SetActive(_waypoints[1].gameObject.activeSelf);
 			return _directionsGO;
 		}
 

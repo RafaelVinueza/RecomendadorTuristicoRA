@@ -58,12 +58,11 @@ public class AddPOIs : MonoBehaviour
             abstractMap.VectorData.AddPointsOfInterestSubLayer(capaDefault);
 
             dropDownPlaces.ClearOptions();
-
+            opcionesDropDown.Add("All Places");
             for (int i = 0; i < variables.days[variables.daySelected].Count; i++)
             {
                 opcionesDropDown.Add("Place " + (i + 1));
             }
-            
             dropDownPlaces.AddOptions(opcionesDropDown);
 
         }
@@ -149,18 +148,29 @@ public class AddPOIs : MonoBehaviour
                     poiObjects.Add(tile.transform.GetChild(j).gameObject);
                 }
             }
-
-            createDirections(new Transform[] { player.transform, poiObjects[0].transform });
+            if (poiObjects.Count != 0 && placeSelected != 0)
+            {
+                createDirections(new Transform[] { player.transform, poiObjects[0].transform });
+            }
         }
     }
 
     public void placeChange(int place)
     {
         placeSelected = place;
-
         abstractMap.VectorData.RemovePointsOfInterestSubLayer(capaDefault);
         list_default.Clear();
-        list_default.Add(String.Format(CultureInfo.InvariantCulture, "{0},{1}", variables.days[variables.daySelected][place].location.lat, variables.days[variables.daySelected][place].location.lng));
+        if (place != 0)
+        {
+            list_default.Add(String.Format(CultureInfo.InvariantCulture, "{0},{1}", variables.days[variables.daySelected][place - 1].location.lat, variables.days[variables.daySelected][place - 1].location.lng));
+        }
+        else
+        {
+            for(int i = 0; i < variables.days[variables.daySelected].Count; i++)
+            {
+                list_default.Add(String.Format(CultureInfo.InvariantCulture, "{0},{1}", variables.days[variables.daySelected][i].location.lat, variables.days[variables.daySelected][i].location.lng));
+            }
+        }
         capaDefault.coordinates = list_default.ToArray();
         abstractMap.VectorData.AddPointsOfInterestSubLayer(capaDefault);
         poiObjects.Clear();
@@ -169,12 +179,6 @@ public class AddPOIs : MonoBehaviour
         {
             direction.Destroy();
         }
-
-        //if(placeSelected == 0)
-        //    createDirections(new Transform[] { player.transform, poiObjects[0].transform });
-        //else
-        //    createDirections(new Transform[] { poiObjects[placeSelected - 1].transform, poiObjects[placeSelected].transform });
-        
     }
 
     public void createDirections(Transform[] transforms)
