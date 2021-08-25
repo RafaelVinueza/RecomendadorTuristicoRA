@@ -37,12 +37,19 @@ public class TouchEvent : MonoBehaviour
                                 TextMeshPro type = plano.transform.GetChild(6).gameObject.GetComponent<TextMeshPro>();
                                 TextMeshPro distance = plano.transform.GetChild(7).gameObject.GetComponent<TextMeshPro>();
 
-                                name.text = poiData.getData().name;
-                                businessStatus.text = (CultureInfo.InvariantCulture.TextInfo.ToTitleCase(poiData.getData().business_status.ToLower()));
-                                address.text = poiData.getData().formatted_address;
-                                phoneNumber.text = poiData.getData().international_phone_number;
+                                if (poiData.getData().name != null)
+                                    name.text = poiData.getData().name;
 
-                                if (poiData.getData().open_hours.open_now)
+                                if (poiData.getData().business_status != null)
+                                    businessStatus.text = (CultureInfo.InvariantCulture.TextInfo.ToTitleCase(poiData.getData().business_status.ToLower()));
+
+                                if (poiData.getData().formatted_address != null)
+                                    address.text = poiData.getData().formatted_address;
+
+                                if (poiData.getData().international_phone_number != null)
+                                    phoneNumber.text = poiData.getData().international_phone_number;
+
+                                if (poiData.getData().open_hours != null && poiData.getData().open_hours.open_now)
                                 {
                                     openNow.text = "Currently Open";
                                 }
@@ -53,10 +60,15 @@ public class TouchEvent : MonoBehaviour
                                         if (poiData.getData().open_hours.periods != null && poiData.getData().open_hours.periods.Length > 0)
                                         {
                                             int day = DayToNumber(DateTime.Now.ToString("dddd", CultureInfo.CreateSpecificCulture("en-US")));
-                                            if (day != -1)
-                                                openNow.text = "Currently Closed, today schedule -> " + poiData.getData().open_hours.periods[day].open + " to " + poiData.getData().open_hours.periods[day].close;
+                                            if (day != -1 && poiData.getData().open_hours.periods[day].open != "" && poiData.getData().open_hours.periods[day].close != "")
+                                            {
+                                                openNow.fontSize = 5;
+                                                openNow.text = "Currently closed, today schedule -> " + poiData.getData().open_hours.periods[day].open + " to " + poiData.getData().open_hours.periods[day].close;
+                                            }
                                             else
+                                            {
                                                 openNow.text = "Currently Closed";
+                                            }
                                         }
                                     }
                                     catch (Exception)
@@ -66,16 +78,19 @@ public class TouchEvent : MonoBehaviour
 
                                 }
 
+
                                 rating.text = "Rating(/5): " + poiData.getData().rating;
-                                type.text = poiData.getData().typePOI;
-                                distance.text = poiData.getData().distance + " meters";
+
+                                if (poiData.getData().typePOI != null)
+                                    type.text = poiData.getData().typePOI;
+
+                                if (poiData.getData().distance != null)
+                                    distance.text = poiData.getData().distance + " meters";
                             }
                             else
                             {
                                 plano.SetActive(false);
                             }
-
-
                         }
                         catch (Exception e)
                         {
@@ -116,13 +131,22 @@ public class TouchEvent : MonoBehaviour
                                 TextMeshPro rating = plano.transform.GetChild(5).gameObject.GetComponent<TextMeshPro>();
                                 TextMeshPro type = plano.transform.GetChild(6).gameObject.GetComponent<TextMeshPro>();
                                 TextMeshPro distance = plano.transform.GetChild(7).gameObject.GetComponent<TextMeshPro>();
+                                TextMeshPro scale = plano.transform.GetChild(8).gameObject.GetComponent<TextMeshPro>();
 
-                                name.text = poiData.getData().name;
-                                businessStatus.text = (CultureInfo.InvariantCulture.TextInfo.ToTitleCase(poiData.getData().business_status.ToLower()));
-                                address.text = poiData.getData().formatted_address;
-                                phoneNumber.text = poiData.getData().international_phone_number;
 
-                                if (poiData.getData().open_hours.open_now)
+                                if (poiData.getData().name != null)
+                                    name.text = poiData.getData().name;
+
+                                if(poiData.getData().business_status != null)
+                                    businessStatus.text = (CultureInfo.InvariantCulture.TextInfo.ToTitleCase(poiData.getData().business_status.ToLower()));
+
+                                if(poiData.getData().formatted_address != null)
+                                    address.text = poiData.getData().formatted_address;
+
+                                if(poiData.getData().international_phone_number != null)
+                                    phoneNumber.text = poiData.getData().international_phone_number;
+
+                                if (poiData.getData().open_hours != null && poiData.getData().open_hours.open_now)
                                 {
                                     openNow.text = "Currently Open";
                                 }
@@ -148,12 +172,17 @@ public class TouchEvent : MonoBehaviour
                                     {
                                         openNow.text = "Unknown if open now";
                                     }
-                                    
                                 }
-
+                                
                                 rating.text = "Rating(/5): " + poiData.getData().rating;
-                                type.text = poiData.getData().typePOI;
-                                distance.text = poiData.getData().distance + " meters";
+                                
+                                if(poiData.getData().typePOI != null) 
+                                    type.text = poiData.getData().typePOI;
+
+                                if(poiData.getData().distance != null)
+                                    distance.text = poiData.getData().distance + " meters";
+
+                                scale.text = "Escala: (" + hit.collider.transform.localScale.x + "," + hit.collider.transform.localScale.y + "," + hit.collider.transform.localScale.z + ")";
                             }
                             else
                             {

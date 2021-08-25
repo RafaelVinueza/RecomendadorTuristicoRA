@@ -23,10 +23,14 @@ public class GPS : MonoBehaviour
 
     void Start()
     {
+        //casa rafa
         //latitud = -0.12941428659107065f;
         //longitud = -78.48624782279018f;
-        latitud = -0.22092957856294237f;
-        longitud = -78.5139782650852f;
+
+        //cerca de los museos
+        //latitud = -0.22092957856294237f;
+        //longitud = -78.5139782650852f;
+        
     }
 
     IEnumerator GPSLocation()
@@ -65,9 +69,9 @@ public class GPS : MonoBehaviour
     {
         if (Input.location.status == LocationServiceStatus.Running)
         {
-            //latitud = Input.location.lastData.latitude;
-            //longitud = Input.location.lastData.longitude;
-            
+            latitud = Input.location.lastData.latitude;
+            longitud = Input.location.lastData.longitude;
+
         }
         else
         {

@@ -19,9 +19,9 @@ public class UserLocation : MonoBehaviour
     private int daySelected;
     private List<PointOfInterest> ubicacionesVisibles = new List<PointOfInterest>();
     private List<PointOfInterest> ubicacionesOcultas = new List<PointOfInterest>();
+    private int range = 70; //metros
+    private float prefabAltitude = 10;
 
-    const int range = 300;
-    
     void Awake()
     {
         variables = GameObject.Find("Controller").GetComponent<Variables>();
@@ -47,13 +47,69 @@ public class UserLocation : MonoBehaviour
         //miLong = -78.51204901265913f;
         initializeDay();
     }
+    
+    void Update()
+    {
+        //miLat = GPS.Instance.latitud;
+        //miLong = GPS.Instance.longitud;
+
+        for (int i = 0; i < ubicacionesVisibles.Count; i++)
+        {
+            float distance = FormulaHaversine((float)miLat, (float)miLong, float.Parse(ubicacionesVisibles[i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(ubicacionesVisibles[i].location.lng, CultureInfo.InvariantCulture.NumberFormat));
+            ubicacionesVisibles[i].distance = distance.ToString("0.0");
+            if (distance > range)
+            {
+                ubicacionesOcultas.Add(ubicacionesVisibles[i]);
+                ubicacionesVisibles.RemoveAt(i);
+            }
+        }
+
+        for (int i = 0; i < ubicacionesOcultas.Count; i++)
+        {
+            float distance = FormulaHaversine((float)miLat, (float)miLong, float.Parse(ubicacionesOcultas[i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(ubicacionesOcultas[i].location.lng, CultureInfo.InvariantCulture.NumberFormat));
+            ubicacionesOcultas[i].distance = distance.ToString("0.0");
+            if (distance < range)
+            {
+                ubicacionesVisibles.Add(ubicacionesOcultas[i]);
+                ubicacionesOcultas.RemoveAt(i);
+            }
+            else
+            {
+                Destroy(ubicacionesOcultas[i].cubo);
+            }
+        }
+
+        ubicacionesVirtuales = EncontrarCuadrante((float)miLat, (float)miLong, ubicacionesVisibles);
+
+        for (int i = 0; i < ubicacionesVisibles.Count; i++)
+        {
+            if (ubicacionesVisibles[i].cubo == null)
+            {
+                ubicacionesVisibles[i].cubo = Instantiate(buscarIcono(ubicacionesVisibles[i].typePOI),
+                new Vector3((float)ubicacionesVirtuales[i, 0], 0, (float)ubicacionesVirtuales[i, 1]),
+                Quaternion.identity);
+                ubicacionesVisibles[i].cubo.transform.localScale = calcularEscala((float)TransformarMetrosUnidades(FormulaHaversine((float)miLat, (float)miLong, float.Parse(days[daySelected][i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(days[daySelected][i].location.lng, CultureInfo.InvariantCulture.NumberFormat))));
+
+                if (ubicacionesVisibles[i].cubo.GetComponent<POIData>() != null)
+                    ubicacionesVisibles[i].cubo.GetComponent<POIData>().setData(ubicacionesVisibles[i]);
+
+            }
+            else
+            {
+                ubicacionesVisibles[i].cubo.transform.position = new Vector3((float)ubicacionesVirtuales[i, 0], prefabAltitude, (float)ubicacionesVirtuales[i, 1]);
+                ubicacionesVisibles[i].cubo.transform.localScale = calcularEscala(FormulaHaversine((float)miLat, (float)miLong, float.Parse(days[daySelected][i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(days[daySelected][i].location.lng, CultureInfo.InvariantCulture.NumberFormat)));
+            }
+
+        }
+
+    }
 
     public void daysChange(int day)
     {
         daySelected = day;
         variables.daySelected = day;
 
-        foreach(PointOfInterest poi in ubicacionesVisibles)
+        foreach (PointOfInterest poi in ubicacionesVisibles)
             poi.cubo.Destroy();
 
         ubicacionesVisibles.Clear();
@@ -83,7 +139,7 @@ public class UserLocation : MonoBehaviour
 
         for (int i = 0; i < ubicacionesVisibles.Count; i++)
         {
-            ubicacionesVisibles[i].cubo = Instantiate(buscarIcono("default"),
+            ubicacionesVisibles[i].cubo = Instantiate(buscarIcono(ubicacionesVisibles[i].typePOI),
                 new Vector3((float)ubicacionesVirtuales[i, 0], 0, (float)ubicacionesVirtuales[i, 1]),
                 Quaternion.identity);
             ubicacionesVisibles[i].cubo.transform.localScale = calcularEscala((float)TransformarMetrosUnidades(FormulaHaversine((float)miLat, (float)miLong, float.Parse(days[daySelected][i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(days[daySelected][i].location.lng, CultureInfo.InvariantCulture.NumberFormat))));
@@ -148,10 +204,15 @@ public class UserLocation : MonoBehaviour
 
     public Vector3 calcularEscala(float distancia)
     {
-        //float valor = (2f * distancia) / 30f;
-        //return new Vector3(valor, valor, valor / 5);
 
-        float valor = distancia / 120f;
+        //float valor = (distancia) / 60;
+        float valor = 10;
+
+        if (distancia < 60 && distancia > 40)
+            valor = 4;
+        else if (distancia < 40)
+            valor = 2;
+
         return new Vector3(valor, valor, valor);
     }
 
@@ -206,59 +267,11 @@ public class UserLocation : MonoBehaviour
         }
     }
 
-    void Update()
+    public void nearPoisChange(bool value)
     {
-        //miLat = GPS.Instance.latitud;
-        //miLong = GPS.Instance.longitud;
-
-        for (int i = 0; i < ubicacionesVisibles.Count; i++)
-        {
-            float distance = FormulaHaversine((float)miLat, (float)miLong, float.Parse(ubicacionesVisibles[i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(ubicacionesVisibles[i].location.lng, CultureInfo.InvariantCulture.NumberFormat));
-            ubicacionesVisibles[i].distance = distance.ToString("0.0");
-            if (distance > range)
-            {
-                ubicacionesOcultas.Add(ubicacionesVisibles[i]);
-                ubicacionesVisibles.RemoveAt(i);
-            }
-        }
-
-        for (int i = 0; i < ubicacionesOcultas.Count; i++)
-        {
-            float distance = FormulaHaversine((float)miLat, (float)miLong, float.Parse(ubicacionesOcultas[i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(ubicacionesOcultas[i].location.lng, CultureInfo.InvariantCulture.NumberFormat));
-            ubicacionesOcultas[i].distance = distance.ToString("0.0");
-            if (distance < range)
-            {
-                ubicacionesVisibles.Add(ubicacionesOcultas[i]);
-                ubicacionesOcultas.RemoveAt(i);
-            }
-            else
-            {
-                Destroy(ubicacionesOcultas[i].cubo);
-            }
-        }
-
-        ubicacionesVirtuales = EncontrarCuadrante((float)miLat, (float)miLong, ubicacionesVisibles);
-
-        for (int i = 0; i < ubicacionesVisibles.Count; i++)
-        {
-            if (ubicacionesVisibles[i].cubo == null)
-            {
-                ubicacionesVisibles[i].cubo = Instantiate(buscarIcono("default"),
-                new Vector3((float)ubicacionesVirtuales[i, 0], 0, (float)ubicacionesVirtuales[i, 1]),
-                Quaternion.identity);
-                ubicacionesVisibles[i].cubo.transform.localScale = calcularEscala((float)TransformarMetrosUnidades(FormulaHaversine((float)miLat, (float)miLong, float.Parse(days[daySelected][i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(days[daySelected][i].location.lng, CultureInfo.InvariantCulture.NumberFormat))));
-
-                if (ubicacionesVisibles[i].cubo.GetComponent<POIData>() != null)
-                    ubicacionesVisibles[i].cubo.GetComponent<POIData>().setData(ubicacionesVisibles[i]);
-
-            }
-            else
-            {
-                ubicacionesVisibles[i].cubo.transform.position = new Vector3((float)ubicacionesVirtuales[i, 0], 0, (float)ubicacionesVirtuales[i, 1]);
-                ubicacionesVisibles[i].cubo.transform.localScale = calcularEscala((float)TransformarMetrosUnidades(FormulaHaversine((float)miLat, (float)miLong, float.Parse(days[daySelected][i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(days[daySelected][i].location.lng, CultureInfo.InvariantCulture.NumberFormat))));
-            }
-
-        }
-
+        if (value)
+            range = 300;
+        else
+            range = 70;
     }
 }
