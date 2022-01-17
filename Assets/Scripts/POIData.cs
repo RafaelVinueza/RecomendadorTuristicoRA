@@ -2,7 +2,7 @@
 
 public class POIData : MonoBehaviour
 {
-    private PointOfInterest data;
+    public PointOfInterest data;
 
     public POIData(PointOfInterest data)
     {
@@ -18,5 +18,5 @@ public class POIData : MonoBehaviour
     {
         this.data = data;
     }
-    
+
 }
