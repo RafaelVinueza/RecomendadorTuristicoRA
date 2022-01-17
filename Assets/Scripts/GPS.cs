@@ -27,10 +27,14 @@ public class GPS : MonoBehaviour
         //latitud = -0.12941428659107065f;
         //longitud = -78.48624782279018f;
 
+        //centro historico (plaza grande)
+        //latitud = -0.21984505247562502f;
+        //longitud = -78.51239181255845f;
+
         //cerca de los museos
         //latitud = -0.22092957856294237f;
         //longitud = -78.5139782650852f;
-        
+
     }
 
     IEnumerator GPSLocation()
@@ -72,10 +76,6 @@ public class GPS : MonoBehaviour
             latitud = Input.location.lastData.latitude;
             longitud = Input.location.lastData.longitude;
 
-        }
-        else
-        {
-            //GPSStatus.text = "Stop";
         }
     }
 

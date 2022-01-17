@@ -88,11 +88,7 @@ public class UserLocation : MonoBehaviour
                 ubicacionesVisibles[i].cubo = Instantiate(buscarIcono(ubicacionesVisibles[i].typePOI),
                 new Vector3((float)ubicacionesVirtuales[i, 0], 0, (float)ubicacionesVirtuales[i, 1]),
                 Quaternion.identity);
-                ubicacionesVisibles[i].cubo.transform.localScale = calcularEscala((float)TransformarMetrosUnidades(FormulaHaversine((float)miLat, (float)miLong, float.Parse(days[daySelected][i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(days[daySelected][i].location.lng, CultureInfo.InvariantCulture.NumberFormat))));
-
-                if (ubicacionesVisibles[i].cubo.GetComponent<POIData>() != null)
-                    ubicacionesVisibles[i].cubo.GetComponent<POIData>().setData(ubicacionesVisibles[i]);
-
+                ubicacionesVisibles[i].cubo.transform.localScale = calcularEscala(FormulaHaversine((float)miLat, (float)miLong, float.Parse(days[daySelected][i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(days[daySelected][i].location.lng, CultureInfo.InvariantCulture.NumberFormat)));
             }
             else
             {
@@ -100,8 +96,9 @@ public class UserLocation : MonoBehaviour
                 ubicacionesVisibles[i].cubo.transform.localScale = calcularEscala(FormulaHaversine((float)miLat, (float)miLong, float.Parse(days[daySelected][i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(days[daySelected][i].location.lng, CultureInfo.InvariantCulture.NumberFormat)));
             }
 
+            if (ubicacionesVisibles[i].cubo.GetComponent<POIData>() != null)
+                ubicacionesVisibles[i].cubo.GetComponent<POIData>().setData(ubicacionesVisibles[i]);
         }
-
     }
 
     public void daysChange(int day)
@@ -114,7 +111,6 @@ public class UserLocation : MonoBehaviour
 
         ubicacionesVisibles.Clear();
         ubicacionesOcultas.Clear();
-        //ubicacionesVirtuales = ;
         initializeDay();
     }
 
@@ -126,13 +122,9 @@ public class UserLocation : MonoBehaviour
             days[daySelected][i].distance = distance.ToString();
 
             if (distance < range)
-            {
                 ubicacionesVisibles.Add(days[daySelected][i]);
-            }
             else
-            {
                 ubicacionesOcultas.Add(days[daySelected][i]);
-            }
         }
 
         ubicacionesVirtuales = EncontrarCuadrante((float)miLat, (float)miLong, ubicacionesVisibles);
@@ -142,7 +134,7 @@ public class UserLocation : MonoBehaviour
             ubicacionesVisibles[i].cubo = Instantiate(buscarIcono(ubicacionesVisibles[i].typePOI),
                 new Vector3((float)ubicacionesVirtuales[i, 0], 0, (float)ubicacionesVirtuales[i, 1]),
                 Quaternion.identity);
-            ubicacionesVisibles[i].cubo.transform.localScale = calcularEscala((float)TransformarMetrosUnidades(FormulaHaversine((float)miLat, (float)miLong, float.Parse(days[daySelected][i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(days[daySelected][i].location.lng, CultureInfo.InvariantCulture.NumberFormat))));
+            ubicacionesVisibles[i].cubo.transform.localScale = calcularEscala(FormulaHaversine((float)miLat, (float)miLong, float.Parse(days[daySelected][i].location.lat, CultureInfo.InvariantCulture.NumberFormat), float.Parse(days[daySelected][i].location.lng, CultureInfo.InvariantCulture.NumberFormat)));
             ubicacionesVisibles[i].distance = "";
 
             if (ubicacionesVisibles[i].cubo.GetComponent<POIData>() != null)
@@ -206,12 +198,12 @@ public class UserLocation : MonoBehaviour
     {
 
         //float valor = (distancia) / 60;
-        float valor = 10;
+        float valor = 8;
 
-        if (distancia < 60 && distancia > 40)
-            valor = 4;
-        else if (distancia < 40)
-            valor = 2;
+        if (distancia < 60 && distancia > 30)
+            valor = 6;
+        else if (distancia <= 30)
+            valor = 3;
 
         return new Vector3(valor, valor, valor);
     }
@@ -259,9 +251,9 @@ public class UserLocation : MonoBehaviour
             case "Mosque":
                 return prefabs[19];
             case "Stadium":
-                return prefabs[19];
+                return prefabs[20];
             case "Zoo":
-                return prefabs[19];
+                return prefabs[21];
             default:
                 return prefabs[0];
         }
